@@ -37,7 +37,11 @@ export async function POST(request: NextRequest) {
           product_data: {
             name: product.name,
             description: product.description,
-            images: product.images.map(img => `${APP_URL}${img}`),
+            images: product.images.map(img => {
+              // Properly encode image URLs to handle Cyrillic and special characters
+              const imagePath = img.split('/').map(segment => encodeURIComponent(segment)).join('/');
+              return `${APP_URL}${imagePath}`;
+            }),
             metadata: {
               product_id: product.id,
               ...product.metadata,
