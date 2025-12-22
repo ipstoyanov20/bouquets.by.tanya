@@ -189,8 +189,38 @@ export function getFeaturedProducts(): Product[] {
   return PRODUCTS.filter(p => p.featured);
 }
 
+/**
+ * Get product by slug with robust Unicode-safe handling
+ * Supports Latin, Cyrillic, and special characters in URLs
+ * 
+ * How it works:
+ * 1. URL-decodes the incoming slug (handles percent-encoded Cyrillic)
+ * 2. Normalizes to lowercase for case-insensitive matching
+ * 3. Compares against all product slugs (also normalized)
+ * 
+ * Examples:
+ * - Latin: "21-red-pink-roses" → matches directly
+ * - Encoded Cyrillic: "%D1%80%D0%BE%D0%B7%D0%BE%D0%B2-%D0%B1%D1%83%D0%BA%D0%B5%D1%82" → decodes to "розов-букет"
+ * - Mixed: "божури-lux" → works as-is
+ */
 export function getProductBySlug(slug: string): Product | undefined {
-  return PRODUCTS.find(p => p.slug === slug);
+  try {
+    // Decode URL-encoded slug (handles %XX encoded characters)
+    const decodedSlug = decodeURIComponent(slug);
+    
+    // Normalize for case-insensitive comparison
+    const normalizedSlug = decodedSlug.toLowerCase().trim();
+    
+    // Find product with normalized comparison
+    return PRODUCTS.find(p => {
+      const productSlug = p.slug.toLowerCase().trim();
+      return productSlug === normalizedSlug;
+    });
+  } catch (error) {
+    // If decodeURIComponent fails (malformed URI), try direct match
+    const normalizedSlug = slug.toLowerCase().trim();
+    return PRODUCTS.find(p => p.slug.toLowerCase().trim() === normalizedSlug);
+  }
 }
 
 export function getProductById(id: string): Product | undefined {

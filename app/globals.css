@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
 }
 
 @theme inline {
@@ -12,10 +12,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Force light mode - e-commerce site should not have dark mode */
+/* This prevents automatic dark mode from making text unreadable */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #000000;
   }
 }
 
@@ -23,4 +25,30 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Global text color fix: ensure text on light backgrounds is readable */
+/* DO NOT apply to dark sections - they handle their own colors */
+main {
+  color: var(--foreground);
+}
+
+/* Ensure headings and paragraphs on light backgrounds are readable */
+main h1, main h2, main h3, main h4, main h5, main h6, 
+main p, main span:not([class*="text-"]), main div:not([class*="bg-"]) {
+  color: inherit;
+}
+
+/* Remove any transforms or effects that could cause visual artifacts */
+* {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Ensure proper rendering without artifacts */
+footer {
+  isolation: isolate;
+  will-change: auto;
 }
