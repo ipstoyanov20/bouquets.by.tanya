@@ -142,7 +142,7 @@ export default function ContactPage() {
                       href="tel:+359888123456"
                       className="text-gray-600 hover:text-rose-600 transition-colors"
                     >
-                      +359 888 123 456
+                      +359 886 611 719
                     </a>
                   </div>
                 </div>

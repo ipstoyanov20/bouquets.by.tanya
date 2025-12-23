@@ -100,7 +100,7 @@ export default function PrivacyPage() {
             </p>
             <p className="text-gray-700 mt-2">
               <strong>Имейл:</strong> info@bouquetsbytanya.bg<br />
-              <strong>Телефон:</strong> +359 888 123 456
+              <strong>Телефон:</strong> +359 886 611 719
             </p>
           </section>
         </div>

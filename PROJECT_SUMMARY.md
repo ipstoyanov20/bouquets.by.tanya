@@ -190,7 +190,7 @@ Use these test cards:
 
 All contact information is configured in the footer and contact page:
 - **Email**: info@bouquetsbytanya.bg
-- **Phone**: +359 888 123 456
+- **Phone**: +359 886 611 719
 - **Location**: София, България
 
 ---

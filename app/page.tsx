@@ -17,7 +17,7 @@ export default function Home() {
               Вечна красота за <span className="text-rose-600">специални моменти</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Изкуствени цветни букети от висококачествени материали. Перфектен подарък, който остава вечен.
+               Изкуствени цветни букети от висококачествени материали Перфектен подарък, който остава вечен <br/> Носим по Еконт в цялата страна. <img src="/econt-logo.png" alt="Econt Logo" className="inline-block rounded-2xl w-16 h-auto ml-2 align-middle" />
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/products">
@@ -59,7 +59,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Бърза доставка</h3>
               <p className="text-gray-600">
-                Доставяме бързо и сигурно до вашия адрес
+                Носим по Еконт - доставяме бързо и сигурно до вашия адрес
               </p>
             </div>
           </div>

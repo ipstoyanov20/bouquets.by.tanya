@@ -129,7 +129,7 @@ export function Footer() {
                   href="tel:+359888123456" 
                   className="text-gray-300 hover:text-rose-400 transition-colors duration-200 text-sm"
                 >
-                  +359 888 123 456
+                  +359 886 611 719
                 </a>
               </li>
               <li className="flex items-start">

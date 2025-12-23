@@ -290,7 +290,7 @@ npm run lint         # Run ESLint
 
 For issues or questions:
 - Email: info@bouquetsbytanya.bg
-- Phone: +359 888 123 456
+- Phone: +359 886 611 719
 
 ## 📄 License
 
