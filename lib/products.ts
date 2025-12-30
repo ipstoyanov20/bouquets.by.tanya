@@ -1,4 +1,4 @@
-// Product database - Production data mapped to actual assets
+// База данни с продукти - Реални продукти с техните ресурси
 import { Product } from './types';
 
 export const PRODUCTS: Product[] = [
@@ -8,6 +8,7 @@ export const PRODUCTS: Product[] = [
     slug: '21-pink-roses-hello-kitty',
     description: 'Очарователен букет с 21 нежни розови рози, украсен с персонализиран надпис с цифра и изключително сладка Hello Kitty декорация. Перфектен избор за детски рожден ден или специално празненство. Направете деня незабравим с този уникален и нежен подарък.',
     price: 9900,
+    priceEur: 4041,
     currency: 'bgn',
     images: ['/tanq/1/Screenshot 2025-12-30 173202.png', '/tanq/1/Screenshot 2025-12-30 173229.png'],
     videos: [],
@@ -17,7 +18,7 @@ export const PRODUCTS: Product[] = [
     metadata: {
       roses_count: 21,
       color: 'pink',
-      occasion: 'birthday'
+      occasion: 'Рожден ден'
     }
   },
   {
@@ -26,6 +27,7 @@ export const PRODUCTS: Product[] = [
     slug: '27-red-glitter-roses',
     description: 'Луксозен и впечатляващ букет от 27 червени рози с блестящ брокат. Елегантен и страстен избор за романтични поводи, годишнини или специални празненства. Червените брокатени рози създават незабравима визия и изразяват дълбоки чувства.',
     price: 12900,
+    priceEur: 5265,
     currency: 'bgn',
     images: ['/tanq/2/Screenshot 2025-12-30 173526.png'],
     videos: ['/tanq/2/q.mp4'],
@@ -35,7 +37,7 @@ export const PRODUCTS: Product[] = [
     metadata: {
       roses_count: 27,
       color: 'red',
-      occasion: 'romantic'
+      occasion: 'Романтика'
     }
   },
   {
@@ -44,13 +46,14 @@ export const PRODUCTS: Product[] = [
     slug: 'elegant-rose-bouquet',
     description: 'Изискан букет от висококачествени рози, създаден с внимание към детайла. Идеален подарък за всеки специален повод. Класическа красота и елегантност в една прекрасна композиция.',
     price: 8900,
+    priceEur: 3633,
     currency: 'bgn',
     images: ['/tanq/3/Screenshot 2025-12-30 173645.png'],
     videos: [],
     category: 'roses',
     inStock: true,
     metadata: {
-      occasion: 'universal'
+      occasion: 'Универсален'
     }
   },
   {
@@ -59,6 +62,7 @@ export const PRODUCTS: Product[] = [
     slug: 'pink-glitter-bouquet',
     description: 'Нежен и стилен букет от розови рози с изискан брокатен финиш. Перфектна комбинация от нежност и блясък, идеална за романтични моменти, рождени дни или за да изразите своята любов и признателност по специален начин.',
     price: 9500,
+    priceEur: 3878,
     currency: 'bgn',
     images: ['/tanq/4/Screenshot 2025-12-30 173706.png'],
     videos: ['/tanq/4/2.mp4'],
@@ -66,7 +70,7 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     metadata: {
       color: 'pink',
-      occasion: 'romantic'
+      occasion: 'Рожден ден'
     }
   },
   {
@@ -75,6 +79,7 @@ export const PRODUCTS: Product[] = [
     slug: 'pink-roses-bouquet',
     description: 'Прекрасен букет от свежи розови рози, изразяващ нежност и романтика. Универсален избор за всеки повод - от романтични жестове до празненства. Розовите рози са символ на благодарност, възхищение и радост.',
     price: 7900,
+    priceEur: 3224,
     currency: 'bgn',
     images: ['/tanq/5/Screenshot 2025-12-30 174014.png'],
     videos: ['/tanq/5/🎀.mp4'],
@@ -82,7 +87,7 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     metadata: {
       color: 'pink',
-      occasion: 'universal'
+      occasion: 'Универсален'
     }
   },
   {
@@ -91,6 +96,7 @@ export const PRODUCTS: Product[] = [
     slug: 'premium-luxury-bouquet',
     description: 'Впечатляващ букет от висококачествени рози, създаден за специални моменти. Изключителна композиция с внимание към всеки детайл, която ще остави незабравими спомени. Идеален за юбилеи, годишнини и грандиозни празненства.',
     price: 15900,
+    priceEur: 6490,
     currency: 'bgn',
     images: ['/tanq/6/Screenshot 2025-12-30 174147.png'],
     videos: ['/tanq/6/AQOwocmxDtYlJ_xeUrE14yqQ8R_sGwDJzMPFztDa8LpsHhyqEY_oLirLlfBPMMi0KD4_7TEMA8SiJHgWJdw3nTnObglZeuI3.mp4'],
@@ -98,7 +104,7 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     metadata: {
-      occasion: 'luxury'
+      occasion: 'Луксозен'
     }
   },
   {
@@ -107,6 +113,7 @@ export const PRODUCTS: Product[] = [
     slug: '17-purple-glitter-roses',
     description: 'Уникален и изискан букет от 17 лилави рози, украсени с брокат. Лилавият цвят символизира елегантност, мистика и изтънченост. Перфектен избор за ценители на неконвенционалната красота и за специални празненства.',
     price: 8900,
+    priceEur: 3633,
     currency: 'bgn',
     images: ['/tanq/7/Screenshot 2025-12-30 174250.png'],
     videos: ['/tanq/7/17 лилави рози с брокат💜🤍.mp4'],
@@ -115,7 +122,7 @@ export const PRODUCTS: Product[] = [
     metadata: {
       roses_count: 17,
       color: 'purple',
-      occasion: 'special'
+      occasion: 'Специален'
     }
   },
   {
@@ -124,13 +131,14 @@ export const PRODUCTS: Product[] = [
     slug: 'two-color-custom-bouquet',
     description: 'Персонализиран букет с две цветове по ваш избор. Създайте уникална комбинация, която отразява вашия стил и предпочитания. Идеален за тези, които търсят нещо специално и различно. Възможност за изцяло персонализирана композиция.',
     price: 10900,
+    priceEur: 4449,
     currency: 'bgn',
     images: ['/tanq/8/Screenshot 2025-12-30 174418.png'],
     videos: ['/tanq/8/Модел с два цвята, по ваш избор🤍🩵.mp4'],
     category: 'mixed',
     inStock: true,
     metadata: {
-      occasion: 'custom'
+      occasion: 'Персонализиран'
     }
   },
   {
@@ -139,6 +147,7 @@ export const PRODUCTS: Product[] = [
     slug: 'white-peach-bouquet',
     description: 'Изискана комбинация от бели и праскови рози, създаваща нежна и елегантна композиция. Перфектен избор за сватби, романтични моменти или специални празненства. Цветовете изразяват чистота, нежност и топлина.',
     price: 9900,
+    priceEur: 4041,
     currency: 'bgn',
     images: ['/tanq/9/Screenshot 2025-12-30 174527.png'],
     videos: ['/tanq/9/За поръчки и въпроси пишете на лс🤍🍑.mp4'],
@@ -146,7 +155,7 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     metadata: {
       color: 'white-peach',
-      occasion: 'wedding'
+      occasion: 'Сватба'
     }
   },
   {
@@ -155,6 +164,7 @@ export const PRODUCTS: Product[] = [
     slug: 'white-blue-bouquet',
     description: 'Свежа и елегантна комбинация от бели и сини рози. Уникален букет, който съчетава спокойствието на синьото с чистотата на белите цветове. Идеален за лятни празненства, морски тематики или за изразяване на дълбоки чувства.',
     price: 9900,
+    priceEur: 4041,
     currency: 'bgn',
     images: ['/tanq/10/Screenshot 2025-12-30 174645.png'],
     videos: ['/tanq/10/За поръчки и въпроси пишете на лс🩵🤍.mp4'],
@@ -162,7 +172,7 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     metadata: {
       color: 'white-blue',
-      occasion: 'universal'
+      occasion: 'Универсален'
     }
   },
   {
@@ -171,6 +181,7 @@ export const PRODUCTS: Product[] = [
     slug: 'most-popular-bouquet',
     description: 'Нашият най-популярен и любим модел букет, който завладява сърцата на клиентите. Класическа композиция с модерен акцент, която е подходяща за всеки повод. Изборът на хиляди доволни клиенти за изразяване на специални чувства.',
     price: 11900,
+    priceEur: 4857,
     currency: 'bgn',
     images: ['/tanq/11/Screenshot 2025-12-30 174801.png'],
     videos: ['/tanq/11/Най-търсеният модел😍❤️.mp4'],
@@ -178,12 +189,12 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     metadata: {
-      occasion: 'universal'
+      occasion: 'Универсален'
     }
   }
 ];
 
-// Helper functions for product queries
+// Помощни функции за заявки към продукти
 export function getAllProducts(): Product[] {
   return PRODUCTS;
 }
@@ -193,34 +204,34 @@ export function getFeaturedProducts(): Product[] {
 }
 
 /**
- * Get product by slug with robust Unicode-safe handling
- * Supports Latin, Cyrillic, and special characters in URLs
+ * Извличане на продукт по slug с подкрепа на Unicode
+ * Поддържа латиница, кирилица и специални символи в URL адреси
  * 
- * How it works:
- * 1. URL-decodes the incoming slug (handles percent-encoded Cyrillic)
- * 2. Normalizes to lowercase for case-insensitive matching
- * 3. Compares against all product slugs (also normalized)
+ * Как работи:
+ * 1. Декодира URL-кодирания slug (обработва кирилица в процент-кодиране)
+ * 2. Нормализира към малки букви за сравнение без значение на регистъра
+ * 3. Сравнява с всички slugs на продукти (също нормализирани)
  * 
- * Examples:
- * - Latin: "21-red-pink-roses" → matches directly
- * - Encoded Cyrillic: "%D1%80%D0%BE%D0%B7%D0%BE%D0%B2-%D0%B1%D1%83%D0%BA%D0%B5%D1%82" → decodes to "розов-букет"
- * - Mixed: "божури-lux" → works as-is
+ * Примери:
+ * - Латиница: "21-red-pink-roses" → съвпада директно
+ * - Кодирана кирилица: "%D1%80%D0%BE%D0%B7%D0%BE%D0%B2-%D0%B1%D1%83%D0%BA%D0%B5%D1%82" → декодира към "розов-букет"
+ * - Смесено: "божури-lux" → работи както е
  */
 export function getProductBySlug(slug: string): Product | undefined {
   try {
-    // Decode URL-encoded slug (handles %XX encoded characters)
+    // Декодира URL-кодирания slug (обработва %XX кодирани символи)
     const decodedSlug = decodeURIComponent(slug);
     
-    // Normalize for case-insensitive comparison
+    // Нормализира за сравнение без значение на регистъра
     const normalizedSlug = decodedSlug.toLowerCase().trim();
     
-    // Find product with normalized comparison
+    // Намира продукт с нормализирано сравнение
     return PRODUCTS.find(p => {
       const productSlug = p.slug.toLowerCase().trim();
       return productSlug === normalizedSlug;
     });
   } catch (error) {
-    // If decodeURIComponent fails (malformed URI), try direct match
+    // Ако decodeURIComponent се провали (неправилен URI), опитва директно съвпадение
     const normalizedSlug = slug.toLowerCase().trim();
     return PRODUCTS.find(p => p.slug.toLowerCase().trim() === normalizedSlug);
   }

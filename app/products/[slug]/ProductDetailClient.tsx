@@ -159,7 +159,6 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                             />
                           )
                         ) : null}
-                        <span className="font-medium text-gray-900 capitalize">{product.metadata.color}</span>
                       </div>
                     </li>
                   )}

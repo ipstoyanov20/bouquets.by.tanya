@@ -6,6 +6,7 @@ export interface Product {
   slug: string;
   description: string;
   price: number; // in cents
+  priceEur?: number; // in cents (EUR)
   currency: string;
   images: string[]; // Array of image URLs
   videos?: string[]; // Array of video URLs
