@@ -6,7 +6,7 @@ import { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
-import { ShoppingCart, Check } from 'lucide-react';
+import { ShoppingCart, Check, Play } from 'lucide-react';
 
 interface ProductDetailClientProps {
   product: Product;
@@ -23,7 +23,28 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const allMedia = [...product.images, ...(product.videos || [])];
+  // Combine media and remove duplicates
+  const allMedia = Array.from(new Set([...product.images, ...(product.videos || [])]));
+  
+  // Helper to get color hex code
+  const getColorHex = (colorName: string): string | null => {
+    const colorMap: Record<string, string> = {
+      'red': '#DC2626',
+      'red-pink': 'linear-gradient(90deg, #DC2626 50%, #EC4899 50%)',
+      'pink': '#EC4899',
+      'peach': '#FDBA74',
+      'black': '#1F2937',
+      'watermelon': '#FB7185',
+      'white': '#FFFFFF',
+      'white-peach': 'linear-gradient(90deg, #FFFFFF 50%, #FDBA74 50%)',
+      'white-blue': 'linear-gradient(90deg, #FFFFFF 50%, #3B82F6 50%)',
+      'blue': '#3B82F6',
+      'yellow': '#FBBF24',
+      'purple': '#A855F7',
+      'orange': '#F97316',
+    };
+    return colorMap[colorName.toLowerCase()] || null;
+  };
 
   return (
     <div className="bg-white py-12">
@@ -33,12 +54,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           <div>
             {/* Main Media */}
             <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 mb-4">
-              {allMedia[selectedImage] ? (
+              {allMedia.length > 0 && allMedia[selectedImage] ? (
                 allMedia[selectedImage].endsWith('.mp4') ? (
                   <video
                     src={allMedia[selectedImage]}
                     controls
                     className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
                   />
                 ) : (
                   <Image
@@ -63,12 +88,17 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`aspect-square rounded-lg overflow-hidden ${
+                    className={`relative aspect-square rounded-lg overflow-hidden ${
                       selectedImage === index ? 'ring-2 ring-rose-600' : ''
                     }`}
                   >
                     {media.endsWith('.mp4') ? (
-                      <video src={media} className="w-full h-full object-cover" />
+                      <>
+                        <video src={media} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <Play className="w-8 h-8 text-white" fill="white" />
+                        </div>
+                      </>
                     ) : (
                       <Image
                         src={media}
@@ -110,9 +140,27 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     </li>
                   )}
                   {product.metadata.color && (
-                    <li className="flex justify-between text-sm">
+                    <li className="flex justify-between text-sm items-center">
                       <span className="text-gray-600">Цвят:</span>
-                      <span className="font-medium text-gray-900">{product.metadata.color}</span>
+                      <div className="flex items-center gap-2">
+                        {getColorHex(product.metadata.color) ? (
+                          getColorHex(product.metadata.color)!.startsWith('linear-gradient') ? (
+                            <div 
+                              className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
+                              style={{ background: getColorHex(product.metadata.color)! }}
+                            />
+                          ) : (
+                            <div 
+                              className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
+                              style={{ 
+                                backgroundColor: getColorHex(product.metadata.color)!,
+                                ...(product.metadata.color.toLowerCase() === 'white' && { borderColor: '#D1D5DB' })
+                              }}
+                            />
+                          )
+                        ) : null}
+                        <span className="font-medium text-gray-900 capitalize">{product.metadata.color}</span>
+                      </div>
                     </li>
                   )}
                   {product.metadata.occasion && (
