@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow overflow-hidden"
+      className="group flex flex-col bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow overflow-hidden h-full"
     >
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -48,7 +48,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2 group-hover:text-rose-600 transition-colors">
           {product.name}
         </h3>
@@ -56,7 +56,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.description}
         </p>
         
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-auto">
           <span className="text-2xl font-bold text-rose-600">
             {formatPrice(product.price, product.currency)}
           </span>

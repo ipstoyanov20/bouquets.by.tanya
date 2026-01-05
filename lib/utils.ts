@@ -8,8 +8,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Format price in BGN
-export function formatPrice(amountInCents: number, currency: string = 'BGN'): string {
+// Format price in EUR
+export function formatPrice(amountInCents: number, currency: string = 'EUR'): string {
   const amount = amountInCents / 100;
   return new Intl.NumberFormat('bg-BG', {
     style: 'currency',

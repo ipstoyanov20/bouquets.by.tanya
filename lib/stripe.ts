@@ -18,7 +18,7 @@ export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 // Currency settings
-export const DEFAULT_CURRENCY = 'bgn';
+export const DEFAULT_CURRENCY = 'eur';
 
 // Tax rate (20% VAT for Bulgaria)
 export const TAX_RATE = 0.20;

@@ -80,15 +80,15 @@ export default function CheckoutPage() {
           <div className="border-t border-gray-200 pt-3 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Междинна сума:</span>
-              <span className="font-medium">{formatPrice(cart.subtotal, 'BGN')}</span>
+              <span className="font-medium">{formatPrice(cart.subtotal, 'EUR')}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">ДДС (20%):</span>
-              <span className="font-medium">{formatPrice(cart.tax, 'BGN')}</span>
+              <span className="font-medium">{formatPrice(cart.tax, 'EUR')}</span>
             </div>
             <div className="flex justify-between text-lg font-bold">
               <span>Общо:</span>
-              <span className="text-rose-600">{formatPrice(cart.total, 'BGN')}</span>
+              <span className="text-rose-600">{formatPrice(cart.total, 'EUR')}</span>
             </div>
           </div>
         </div>

@@ -112,17 +112,17 @@ export default function CartPage() {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Междинна сума:</span>
-                  <span className="font-medium">{formatPrice(cart.subtotal, 'BGN')}</span>
+                  <span className="font-medium">{formatPrice(cart.subtotal, 'EUR')}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">ДДС (20%):</span>
-                  <span className="font-medium">{formatPrice(cart.tax, 'BGN')}</span>
+                  <span className="font-medium">{formatPrice(cart.tax, 'EUR')}</span>
                 </div>
                 <div className="border-t border-gray-200 pt-3">
                   <div className="flex justify-between">
                     <span className="font-bold text-lg">Общо:</span>
                     <span className="font-bold text-lg text-rose-600">
-                      {formatPrice(cart.total, 'BGN')}
+                      {formatPrice(cart.total, 'EUR')}
                     </span>
                   </div>
                 </div>
