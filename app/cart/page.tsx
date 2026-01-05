@@ -27,18 +27,18 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-gray-50 py-12">
+    <div className="bg-gray-50 py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Количка</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Количка</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4">
             {cart.items.map((item) => (
-              <div key={item.product.id} className="bg-white rounded-lg shadow-sm p-6">
-                <div className="flex gap-6">
+              <div key={item.product.id} className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+                <div className="flex gap-4 sm:gap-6">
                   {/* Product Image */}
-                  <div className="relative w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100">
                     {item.product.images[0] ? (
                       <Image
                         src={item.product.images[0]}
@@ -54,30 +54,32 @@ export default function CartPage() {
                   </div>
 
                   {/* Product Info */}
-                  <div className="grow">
+                  <div className="grow min-w-0">
                     <Link
                       href={`/products/${item.product.slug}`}
-                      className="font-semibold text-gray-900 hover:text-rose-600 transition-colors"
+                      className="font-semibold text-sm sm:text-base text-gray-900 hover:text-rose-600 transition-colors block truncate"
                     >
                       {item.product.name}
                     </Link>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1">
                       {formatPrice(item.product.price, item.product.currency)}
                     </p>
 
-                    <div className="flex items-center gap-4 mt-4">
+                    <div className="flex items-center gap-3 sm:gap-4 mt-3 sm:mt-4">
                       {/* Quantity Controls */}
                       <div className="flex items-center border border-gray-300 rounded-lg">
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="p-2 hover:bg-gray-100 transition-colors"
+                          className="p-2 hover:bg-gray-100 transition-colors touch-manipulation"
+                          aria-label="Decrease quantity"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="px-4 font-medium">{item.quantity}</span>
+                        <span className="px-3 sm:px-4 font-medium text-sm sm:text-base">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="p-2 hover:bg-gray-100 transition-colors"
+                          className="p-2 hover:bg-gray-100 transition-colors touch-manipulation"
+                          aria-label="Increase quantity"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
@@ -86,7 +88,8 @@ export default function CartPage() {
                       {/* Remove Button */}
                       <button
                         onClick={() => removeItem(item.product.id)}
-                        className="text-red-600 hover:text-red-700 transition-colors"
+                        className="text-red-600 hover:text-red-700 transition-colors touch-manipulation p-2"
+                        aria-label="Remove item"
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
@@ -95,7 +98,7 @@ export default function CartPage() {
 
                   {/* Item Total */}
                   <div className="text-right">
-                    <p className="font-bold text-gray-900">
+                    <p className="font-bold text-sm sm:text-base text-gray-900">
                       {formatPrice(item.product.price * item.quantity, item.product.currency)}
                     </p>
                   </div>
@@ -106,8 +109,8 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Обобщение</h2>
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 lg:sticky lg:top-24">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Обобщение</h2>
               
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
@@ -128,13 +131,13 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <Link href="/checkout">
+              <Link href="/checkout" className="block">
                 <Button size="lg" className="w-full">
                   Продължи към плащане
                 </Button>
               </Link>
 
-              <Link href="/products">
+              <Link href="/products" className="block">
                 <Button size="lg" variant="outline" className="w-full mt-3">
                   Продължи пазаруването
                 </Button>

@@ -14,16 +14,16 @@ export function Footer() {
       {/* Visual separator from main content */}
       <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-rose-500/20 to-transparent" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {/* Main footer content - 4 column grid on desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
           
           {/* Brand Section - Takes 2 columns on large screens */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <h3 className="text-2xl font-bold text-white mb-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
               bouquets.by.tanya
             </h3>
-            <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-sm">
+            <p className="text-gray-300 text-sm leading-relaxed mb-4 sm:mb-6 max-w-sm">
               Изкуствени цветни букети от висококачествени материали.
               Перфектен подарък за всеки повод, който остава вечен.
             </p>
@@ -33,19 +33,19 @@ export function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-rose-400 transition-colors duration-200"
+                className="text-gray-300 hover:text-rose-400 transition-colors duration-200 touch-manipulation"
                 aria-label="Facebook"
               >
-                <Facebook className="w-6 h-6" />
+                <Facebook className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-rose-400 transition-colors duration-200"
+                className="text-gray-300 hover:text-rose-400 transition-colors duration-200 touch-manipulation"
                 aria-label="Instagram"
               >
-                <Instagram className="w-6 h-6" />
+                <Instagram className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
             </div>
           </div>
