@@ -62,7 +62,12 @@ export default function CartPage() {
                       {item.product.name}
                     </Link>
                     <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                      {formatPrice(item.product.price, item.product.currency)}
+                      {formatPrice(item.customPrice || item.product.price, item.product.currency)}
+                      {item.customRoseCount && (
+                        <span className="ml-2 text-rose-600 font-medium">
+                          • {item.customRoseCount} рози
+                        </span>
+                      )}
                     </p>
 
                     <div className="flex items-center gap-3 sm:gap-4 mt-3 sm:mt-4">
@@ -99,7 +104,7 @@ export default function CartPage() {
                   {/* Item Total */}
                   <div className="text-right">
                     <p className="font-bold text-sm sm:text-base text-gray-900">
-                      {formatPrice(item.product.price * item.quantity, item.product.currency)}
+                      {formatPrice((item.customPrice || item.product.price) * item.quantity, item.product.currency)}
                     </p>
                   </div>
                 </div>

@@ -14,10 +14,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-              Вечна красота за <span className="text-rose-600">специални моменти</span>
+              Бутикова красота за <span className="text-rose-600">специални моменти</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
-               Изкуствени цветни букети от висококачествени материали Перфектен подарък, който остава вечен <br className="hidden sm:block" /> Носим по Еконт в цялата страна. <img src="/econt-logo.png" alt="Econt Logo" className="inline-block rounded-2xl w-12 sm:w-16 h-auto ml-2 align-middle" />
+               Изкуствени цветни букети от висококачествени материали Перфектен подарък, който остава бутиков <br className="hidden sm:block" /> Носим по Еконт в цялата страна <img src="/econt-logo.png" alt="Econt Logo" className="inline-block rounded-2xl w-12 sm:w-16 h-auto ml-2 align-middle" />
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/products" className="w-full sm:w-auto">
@@ -74,36 +74,15 @@ export default function Home() {
               <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur rounded-full mb-4 sm:mb-6">
                 <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Създай своя уникален букет</h2>
-              <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6 text-white/90 leading-relaxed px-2">
-                Искаш букет с определени цветове? Специална форма или размер? 
-                Ние реализираме твоята визия! Изработваме персонализирани букети 
-                точно по твоите желания - избери цветовете, формата и стила.
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+                Поръчай персонализиран букет
+              </h2>
+              <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6">
+                Избери букет и персонализирай броя рози според твоите предпочитания
               </p>
-              <div className="bg-white/20 backdrop-blur rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
-                <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">Какво можем да направим за теб:</h3>
-                <ul className="space-y-2 text-sm sm:text-base text-white/95">
-                  <li className="flex items-center justify-center gap-2">
-                    <span className="inline-block w-2 h-2 bg-white rounded-full flex-shrink-0"></span>
-                    <span>Букети в твоите любими цветове</span>
-                  </li>
-                  <li className="flex items-center justify-center gap-2">
-                    <span className="inline-block w-2 h-2 bg-white rounded-full flex-shrink-0"></span>
-                    <span>Персонализиран размер и форма</span>
-                  </li>
-                  <li className="flex items-center justify-center gap-2">
-                    <span className="inline-block w-2 h-2 bg-white rounded-full flex-shrink-0"></span>
-                    <span>Комбинация от различни видове цветя</span>
-                  </li>
-                  <li className="flex items-center justify-center gap-2">
-                    <span className="inline-block w-2 h-2 bg-white rounded-full flex-shrink-0"></span>
-                    <span>Тематични букети заspecални поводи</span>
-                  </li>
-                </ul>
-              </div>
-              <Link href="/contact" className="block">
-                <Button size="lg" className="w-full sm:w-auto bg-white text-rose-600 hover:bg-gray-100 font-semibold text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 h-auto shadow-lg hover:shadow-xl transition-all">
-                  Поръчай персонализиран букет
+              <Link href="/products">
+                <Button size="lg" variant="secondary" className="bg-white text-rose-600 hover:bg-gray-50">
+                  Разгледай букетите
                 </Button>
               </Link>
             </div>

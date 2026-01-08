@@ -23,6 +23,8 @@ export interface Product {
 export interface CartItem {
   product: Product;
   quantity: number;
+  customRoseCount?: number;
+  customPrice?: number;
 }
 
 export interface Cart {

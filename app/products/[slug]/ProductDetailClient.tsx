@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
+import { RoseCountSelector } from '@/components/RoseCountSelector';
 import { formatPrice } from '@/lib/utils';
 import { ShoppingCart, Check, Play } from 'lucide-react';
 
@@ -16,12 +17,26 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const { addItem } = useCart();
   const [selectedImage, setSelectedImage] = useState(0);
   const [added, setAdded] = useState(false);
+  const [roseCount, setRoseCount] = useState(product.metadata?.roses_count || 11);
 
   const handleAddToCart = () => {
-    addItem(product);
+    const originalRoseCount = product.metadata?.roses_count || 11;
+    const pricePerRose = product.price / originalRoseCount;
+    const customPrice = Math.round(pricePerRose * roseCount);
+    
+    addItem(product, roseCount, customPrice);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
+
+  // Calculate current price based on rose count
+  const calculateCurrentPrice = () => {
+    const originalRoseCount = product.metadata?.roses_count || 11;
+    const pricePerRose = product.price / originalRoseCount;
+    return Math.round(pricePerRose * roseCount);
+  };
+
+  const currentPrice = calculateCurrentPrice();
 
   // Combine media and remove duplicates
   const allMedia = Array.from(new Set([...product.images, ...(product.videos || [])]));
@@ -121,8 +136,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             
             <div className="mb-4 sm:mb-6">
               <span className="text-3xl sm:text-4xl font-bold text-rose-600">
-                {formatPrice(product.price, product.currency)}
+                {formatPrice(currentPrice, product.currency)}
               </span>
+              {currentPrice !== product.price && (
+                <span className="ml-3 text-lg text-gray-400 line-through">
+                  {formatPrice(product.price, product.currency)}
+                </span>
+              )}
             </div>
 
             <div className="mb-4 sm:mb-6">
@@ -134,35 +154,6 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               <div className="border-t border-b border-gray-200 py-4 sm:py-6 mb-4 sm:mb-6">
                 <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-base sm:text-lg">Характеристики:</h3>
                 <ul className="space-y-2">
-                  {product.metadata.roses_count && (
-                    <li className="flex justify-between text-sm">
-                      <span className="text-gray-600">Брой рози:</span>
-                      <span className="font-medium text-gray-900">{product.metadata.roses_count}</span>
-                    </li>
-                  )}
-                  {product.metadata.color && (
-                    <li className="flex justify-between text-sm items-center">
-                      <span className="text-gray-600">Цвят:</span>
-                      <div className="flex items-center gap-2">
-                        {getColorHex(product.metadata.color) ? (
-                          getColorHex(product.metadata.color)!.startsWith('linear-gradient') ? (
-                            <div 
-                              className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
-                              style={{ background: getColorHex(product.metadata.color)! }}
-                            />
-                          ) : (
-                            <div 
-                              className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
-                              style={{ 
-                                backgroundColor: getColorHex(product.metadata.color)!,
-                                ...(product.metadata.color.toLowerCase() === 'white' && { borderColor: '#D1D5DB' })
-                              }}
-                            />
-                          )
-                        ) : null}
-                      </div>
-                    </li>
-                  )}
                   {product.metadata.occasion && (
                     <li className="flex justify-between text-sm">
                       <span className="text-gray-600">Повод:</span>
@@ -178,6 +169,14 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 </ul>
               </div>
             )}
+
+            {/* Rose Count Selector */}
+            <div className="mb-6">
+              <RoseCountSelector 
+                value={roseCount} 
+                onChange={setRoseCount}
+              />
+            </div>
 
             {/* Add to Cart */}
             <Button

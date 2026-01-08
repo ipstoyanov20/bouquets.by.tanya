@@ -25,9 +25,9 @@ export function Footer() {
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed mb-4 sm:mb-6 max-w-sm">
               Изкуствени цветни букети от висококачествени материали.
-              Перфектен подарък за всеки повод, който остава вечен.
+              Перфектен подарък за всеки повод
             </p>
-            {/* Social Media Links */}
+            {/* Social Media Links
             <div className="flex items-center space-x-4">
               <a
                 href="https://facebook.com"
@@ -47,7 +47,7 @@ export function Footer() {
               >
                 <Instagram className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Quick Links Section */}

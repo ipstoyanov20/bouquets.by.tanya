@@ -13,7 +13,7 @@ export default function AboutPage() {
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">За нас</h1>
           <p className="text-lg sm:text-xl text-gray-600 px-4">
-            Създаваме вечна красота с любов и внимание към детайла
+            Създаваме бутикова красота с любов и внимание към детайла
           </p>
         </div>
 

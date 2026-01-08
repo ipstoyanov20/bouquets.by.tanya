@@ -6,7 +6,7 @@ import { calculateTax, safeJSONParse } from '@/lib/utils';
 
 // Cart actions
 type CartAction =
-  | { type: 'ADD_ITEM'; payload: Product }
+  | { type: 'ADD_ITEM'; payload: { product: Product; customRoseCount?: number; customPrice?: number } }
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { productId: string; quantity: number } }
   | { type: 'CLEAR_CART' }
@@ -15,7 +15,7 @@ type CartAction =
 // Cart context type
 interface CartContextType {
   cart: Cart;
-  addItem: (product: Product) => void;
+  addItem: (product: Product, customRoseCount?: number, customPrice?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -29,7 +29,10 @@ const CART_STORAGE_KEY = 'bouquets_cart';
 
 // Calculate cart totals
 function calculateCartTotals(items: CartItem[]): { subtotal: number; tax: number; total: number } {
-  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const subtotal = items.reduce((sum, item) => {
+    const price = item.customPrice || item.product.price;
+    return sum + price * item.quantity;
+  }, 0);
   const tax = calculateTax(subtotal);
   const total = subtotal + tax;
   return { subtotal, tax, total };
@@ -39,15 +42,24 @@ function calculateCartTotals(items: CartItem[]): { subtotal: number; tax: number
 function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.find(item => item.product.id === action.payload.id);
+      const existingItem = state.find(item => 
+        item.product.id === action.payload.product.id &&
+        item.customRoseCount === action.payload.customRoseCount
+      );
       if (existingItem) {
         return state.map(item =>
-          item.product.id === action.payload.id
+          item.product.id === action.payload.product.id &&
+          item.customRoseCount === action.payload.customRoseCount
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...state, { product: action.payload, quantity: 1 }];
+      return [...state, { 
+        product: action.payload.product, 
+        quantity: 1,
+        customRoseCount: action.payload.customRoseCount,
+        customPrice: action.payload.customPrice
+      }];
     }
 
     case 'REMOVE_ITEM': {
@@ -100,8 +112,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items]);
 
-  const addItem = (product: Product) => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
+  const addItem = (product: Product, customRoseCount?: number, customPrice?: number) => {
+    dispatch({ type: 'ADD_ITEM', payload: { product, customRoseCount, customPrice } });
   };
 
   const removeItem = (productId: string) => {
