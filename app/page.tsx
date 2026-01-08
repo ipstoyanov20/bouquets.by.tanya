@@ -81,7 +81,7 @@ export default function Home() {
                 Избери букет и персонализирай броя рози според твоите предпочитания
               </p>
               <Link href="/products">
-                <Button size="lg" variant="secondary" className="bg-white text-rose-600 hover:bg-gray-50">
+                <Button size="lg" variant="outline" className="bg-white text-rose-600 hover:bg-gray-50 border-white">
                   Разгледай букетите
                 </Button>
               </Link>
