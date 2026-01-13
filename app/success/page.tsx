@@ -48,12 +48,7 @@ function SuccessContent() {
             Вашата поръчка ще бъде обработена в най-кратък срок.
           </p>
 
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <p className="text-sm text-gray-600">
-              <strong>Референтен номер:</strong><br />
-              {sessionId}
-            </p>
-          </div>
+          
 
           <div className="space-y-3">
             <Link href="/products">
