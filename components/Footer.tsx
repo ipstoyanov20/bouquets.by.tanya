@@ -39,7 +39,7 @@ export function Footer() {
                 <Facebook className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/_bouquets.by.taniaa?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-rose-400 transition-colors duration-200 touch-manipulation"
