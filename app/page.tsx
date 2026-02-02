@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
 import { getFeaturedProducts } from "@/lib/products";
+import TrustedClients from "@/components/TrustedClients";
 import { Heart, Shield, Truck } from "lucide-react";
 
 export default function Home() {
@@ -66,8 +67,10 @@ export default function Home() {
         </div>
       </section>
 
+      <TrustedClients />
+
       {/* Custom Orders Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-br from-rose-500 via-rose-600 to-pink-600 text-white">
+      <section className="py-12 sm:py-16 bg-linear-to-br from-rose-500 via-rose-600 to-pink-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 md:p-12 border border-white/20 shadow-2xl">
             <div className="text-center max-w-3xl mx-auto">

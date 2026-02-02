@@ -27,17 +27,13 @@ export function Footer() {
               Изкуствени цветни букети от висококачествени материали.
               Перфектен подарък за всеки повод
             </p>
-            {/* Social Media Links
-            <div className="flex items-center space-x-4">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-rose-400 transition-colors duration-200 touch-manipulation"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-5 h-5 sm:w-6 sm:h-6" />
-              </a>
+
+            <div className="mt-3 flex items-center gap-3">
+              <span className="text-sm text-gray-300">Доверие от щастливи клиенти</span>
+              <img src="/econt-logo.png" alt="Econt Logo" className="inline-block h-6" />
+            </div>
+
+            <div className="flex items-center space-x-4 mt-4">
               <a
                 href="https://www.instagram.com/_bouquets.by.taniaa?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                 target="_blank"
@@ -47,7 +43,7 @@ export function Footer() {
               >
                 <Instagram className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
-            </div> */}
+            </div>
           </div>
 
           {/* Quick Links Section */}
