@@ -7,11 +7,29 @@ import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
+interface EcontData {
+  id: string;
+  name: string;
+  face?: string;
+  phone: string;
+  'e-mail': string;
+  city_name: string;
+  post_code: string;
+  office_code?: string;
+  address?: string;
+  shipping_price_cod: string | number;
+  shipping_price: string | number;
+  shipping_price_currency: string;
+  shipment_error?: string;
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'econt'>('econt'); // Default to Econt as priority
+  const [econtData, setEcontData] = useState<EcontData | null>(null);
 
   if (cart.items.length === 0) {
     router.push('/cart');
@@ -23,37 +41,101 @@ export default function CheckoutPage() {
     setError('');
 
     try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: cart.items.map(item => ({
-            productId: item.product.id,
-            quantity: item.quantity,
-          })),
-        }),
-      });
+      if (paymentMethod === 'stripe') {
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: cart.items.map(item => ({
+              productId: item.product.id,
+              quantity: item.quantity,
+            })),
+          }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Checkout failed');
-      }
+        if (!response.ok) {
+          throw new Error(data.error || 'Checkout failed');
+        }
 
-      // Redirect to Stripe Checkout
-      if (data.url) {
-        window.location.href = data.url;
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        } else {
+          throw new Error('No checkout URL received');
+        }
       } else {
-        throw new Error('No checkout URL received');
+        // Econt checkout logic
+        if (!econtData) {
+          throw new Error('Моля, изберете адрес за доставка чрез формата на Еконт');
+        }
+
+        const response = await fetch('/api/econt/order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: cart.items.map(item => ({
+              name: item.product.name,
+              SKU: item.product.id,
+              count: item.quantity,
+              totalPrice: (item.product.price * item.quantity / 100),
+              totalWeight: item.quantity, // 1kg per item fallback
+            })),
+            customerInfo: {
+              id: econtData.id,
+              name: econtData.name,
+              face: econtData.face,
+              phone: econtData.phone,
+              email: econtData['e-mail'],
+              cityName: econtData.city_name,
+              postCode: econtData.post_code,
+              address: econtData.address,
+              officeCode: econtData.office_code,
+            },
+            order_total: (cart.total / 100) * 1.95583, // EUR to BGN
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Неуспешна поръчка с Еконт');
+        }
+
+        router.push(`/success?order_id=${data.id}${data.waybillNumber ? `&waybill_number=${data.waybillNumber}` : ''}`);
       }
     } catch (err) {
       console.error('Checkout error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred during checkout');
+    } finally {
       setLoading(false);
     }
   };
+
+  // Listen for Econt iframe messages
+  if (typeof window !== 'undefined') {
+    const handleEcontMessage = (event: MessageEvent) => {
+      const data = event.data as EcontData;
+      if (data && data.id) {
+        setEcontData(data);
+        if (data.shipment_error && data.shipment_error !== '') {
+          setError('Грешка при изчисляване на доставката: ' + data.shipment_error);
+        }
+      }
+    };
+    window.addEventListener('message', handleEcontMessage);
+  }
+
+  const econtCalcUrl = process.env.NEXT_PUBLIC_ECONT_SHIPPMENT_CALC_URL;
+  const econtShopId = process.env.NEXT_PUBLIC_ECONT_SHOP_ID || '5080473';
+  const orderTotalBgn = (cart.total / 100) * 1.95583;
+  const totalWeight = cart.items.reduce((acc, item) => acc + item.quantity, 0);
+
+  const iframeUrl = `${econtCalcUrl}?id_shop=${econtShopId}&order_total=${orderTotalBgn.toFixed(2)}&order_currency=BGN&order_weight=${totalWeight}`;
 
   return (
     <div className="bg-gray-50 py-8 sm:py-12">
@@ -93,19 +175,77 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Payment Info */}
+        {/* Selection of Payment Method */}
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Информация за плащане</h2>
-          <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
-            Ще бъдете пренасочени към защитена страница на Stripe за завършване на плащането.
-            Приемаме всички основни кредитни и дебитни карти, както и Apple Pay и Google Pay.
-          </p>
-          
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
-            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            <span>Сигурно плащане чрез Stripe</span>
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Начин на плащане</h2>
+          <div className="space-y-4">
+            <div 
+              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${paymentMethod === 'econt' ? 'border-rose-500 bg-rose-50' : 'border-gray-200'}`}
+              onClick={() => setPaymentMethod('econt')}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'econt' ? 'border-rose-500' : 'border-gray-300'}`}>
+                    {paymentMethod === 'econt' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-900">Наложен платеж (с Еконт)</span>
+                    <p className="text-xs text-gray-500">Плащане при получаване на куриера</p>
+                  </div>
+                </div>
+                <img src="/econt-logo.png" alt="Econt" className="h-8" onError={(e) => (e.currentTarget.style.display = 'none')} />
+              </div>
+
+              {paymentMethod === 'econt' && (
+                <div className="mt-4 border-t pt-4">
+                  <p className="text-sm font-medium mb-2">Изберете адрес за доставка:</p>
+                  <div className="w-full bg-gray-100 rounded overflow-hidden" style={{ minHeight: '500px' }}>
+                    <iframe 
+                      src={iframeUrl}
+                      className="w-full border-0" 
+                      style={{ height: '600px' }}
+                      title="Econt Delivery"
+                    />
+                  </div>
+                  {econtData && (
+                    <div className="mt-3 p-3 bg-green-50 border border-green-100 rounded text-sm text-green-800">
+                      <strong>Избран адрес:</strong> {econtData.address || econtData.office_code}, {econtData.city_name}
+                      <br />
+                      <strong>Доставка:</strong> {econtData.shipping_price_cod} {econtData.shipping_price_currency}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div 
+              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${paymentMethod === 'stripe' ? 'border-rose-500 bg-rose-50' : 'border-gray-200'}`}
+              onClick={() => setPaymentMethod('stripe')}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'stripe' ? 'border-rose-500' : 'border-gray-300'}`}>
+                    {paymentMethod === 'stripe' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-900">С карта (Stripe)</span>
+                    <p className="text-xs text-gray-500">Сигурно плащане с кредитна или дебитна карта</p>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <img src="https://js.stripe.com/v3/fingerprinted/img/visa-7ad57358.svg" alt="Visa" className="h-4" />
+                  <img src="https://js.stripe.com/v3/fingerprinted/img/mastercard-4d88444a.svg" alt="Mastercard" className="h-4" />
+                </div>
+              </div>
+              
+              {paymentMethod === 'stripe' && (
+                <div className="mt-4 border-t pt-4">
+                  <p className="text-sm text-gray-600">
+                    Ще бъдете пренасочени към защитена страница на Stripe за завършване на плащането.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

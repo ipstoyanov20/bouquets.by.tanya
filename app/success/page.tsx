@@ -13,17 +13,18 @@ function SuccessContent() {
   const { clearCart } = useCart();
   const [loading, setLoading] = useState(true);
   const sessionId = searchParams.get('session_id');
+  const orderId = searchParams.get('order_id');
 
   useEffect(() => {
-    if (sessionId) {
-      // Clear cart after successful payment
+    if (sessionId || orderId) {
+      // Clear cart after successful payment or order confirmation
       clearCart();
       setLoading(false);
     } else {
-      // No session ID, redirect to home
+      // No ID, redirect to home
       router.push('/');
     }
-  }, [sessionId, clearCart, router]);
+  }, [sessionId, orderId, clearCart, router]);
 
   if (loading) {
     return (
@@ -49,6 +50,20 @@ function SuccessContent() {
           </p>
 
           
+
+          {orderId && (
+            <div className="bg-gray-100 rounded p-3 mb-6 font-mono text-sm">
+              <p className="text-gray-500 mb-1 font-sans">Номер на поръчка:</p>
+              <div className="font-bold text-gray-900">{orderId}</div>
+              
+              {searchParams.get('waybill_number') && (
+                <>
+                  <p className="text-gray-500 mt-3 mb-1 font-sans">Товарителница (Еконт):</p>
+                  <div className="font-bold text-rose-600">{searchParams.get('waybill_number')}</div>
+                </>
+              )}
+            </div>
+          )}
 
           <div className="space-y-3">
             <Link href="/products">
