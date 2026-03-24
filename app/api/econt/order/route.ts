@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendOrderConfirmationEmail } from '@/lib/mail';
 
-const ECONT_API_URL = 'https://demo.econt.com/ee/services/ShippingService.createLabel.json';
+const ECONT_API_URL = 'https://demo.econt.com/ee/services/Shipments/LabelService.createLabel.json';
 const ECONT_AUTH = process.env.ECONT_PRIVATE_KEY || 'Basic aWFzcC1kZXY6MUFzcC1kZXY=';
+
 
 interface OrderItem {
   name: string;
@@ -114,11 +116,30 @@ export async function POST(request: NextRequest) {
     }
 
     // Success response from Econt
-    // The waybill number is usually in label.shipmentNumber or similar depending on version
+    const waybillNumber = data.label?.shipmentNumber || data.shipmentNumber;
+
+    // Send order confirmation email
+    let emailSent = false;
+    try {
+      await sendOrderConfirmationEmail({
+        orderId: orderNumber,
+        customerName: customerInfo.name,
+        customerEmail: customerInfo.email,
+        total: order_total,
+        items: items,
+        waybillNumber: waybillNumber,
+        address: `${customerInfo.address || customerInfo.officeCode}, ${customerInfo.cityName}`,
+      });
+      emailSent = true;
+    } catch (emailErr) {
+      console.error('Failed to send confirmation email:', emailErr);
+    }
+
     return NextResponse.json({
       success: true,
       id: orderNumber, 
-      waybillNumber: data.label?.shipmentNumber || data.shipmentNumber,
+      waybillNumber,
+      emailSent,
       econtResponse: data,
     });
 

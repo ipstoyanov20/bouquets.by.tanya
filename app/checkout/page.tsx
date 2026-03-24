@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Truck, CreditCard, ChevronRight, Wallet } from 'lucide-react';
 
 interface EcontData {
   id: string;
@@ -28,11 +28,16 @@ export default function CheckoutPage() {
   const { cart } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'econt'>('econt'); // Default to Econt as priority
+  const [paymentMethod, setPaymentMethod] = useState<'econt' | 'stripe'>('econt');
   const [econtData, setEcontData] = useState<EcontData | null>(null);
 
+  useEffect(() => {
+    if (cart.items.length === 0) {
+      router.push('/cart');
+    }
+  }, [cart.items.length, router]);
+
   if (cart.items.length === 0) {
-    router.push('/cart');
     return null;
   }
 
@@ -49,14 +54,15 @@ export default function CheckoutPage() {
           },
           body: JSON.stringify({
             items: cart.items.map(item => ({
-              productId: item.product.id,
+              name: item.product.name,
+              price: item.product.price,
               quantity: item.quantity,
+              image: item.product.images?.[0],
             })),
           }),
         });
 
         const data = await response.json();
-
         if (!response.ok) {
           throw new Error(data.error || 'Checkout failed');
         }
@@ -84,14 +90,14 @@ export default function CheckoutPage() {
               SKU: item.product.id,
               count: item.quantity,
               totalPrice: (item.product.price * item.quantity / 100),
-              totalWeight: item.quantity, // 1kg per item fallback
+              totalWeight: item.quantity,
             })),
             customerInfo: {
               id: econtData.id,
               name: econtData.name,
               face: econtData.face,
               phone: econtData.phone,
-              email: econtData['e-mail'],
+              email: econtData['e-mail'] || (econtData as any).email || '',
               cityName: econtData.city_name,
               postCode: econtData.post_code,
               address: econtData.address,
@@ -117,18 +123,21 @@ export default function CheckoutPage() {
   };
 
   // Listen for Econt iframe messages
-  if (typeof window !== 'undefined') {
+  useEffect(() => {
     const handleEcontMessage = (event: MessageEvent) => {
       const data = event.data as EcontData;
       if (data && data.id) {
-        setEcontData(data);
+        setEcontData(prev => JSON.stringify(prev) === JSON.stringify(data) ? prev : data);
         if (data.shipment_error && data.shipment_error !== '') {
-          setError('Грешка при изчисляване на доставката: ' + data.shipment_error);
+          setError(prev => prev === 'Грешка при изчисляване на доставката: ' + data.shipment_error ? prev : 'Грешка при изчисляване на доставката: ' + data.shipment_error);
+        } else {
+          setError(prev => prev === '' ? prev : '');
         }
       }
     };
     window.addEventListener('message', handleEcontMessage);
-  }
+    return () => window.removeEventListener('message', handleEcontMessage);
+  }, []);
 
   const econtCalcUrl = process.env.NEXT_PUBLIC_ECONT_SHIPPMENT_CALC_URL;
   const econtShopId = process.env.NEXT_PUBLIC_ECONT_SHOP_ID || '5080473';
@@ -138,140 +147,178 @@ export default function CheckoutPage() {
   const iframeUrl = `${econtCalcUrl}?id_shop=${econtShopId}&order_total=${orderTotalBgn.toFixed(2)}&order_currency=BGN&order_weight=${totalWeight}`;
 
   return (
-    <div className="bg-gray-50 py-8 sm:py-12">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Завършване на поръчката</h1>
+    <div className="bg-slate-50 min-h-screen py-10 sm:py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <header className="mb-10 text-center">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Завършване на поръчката</h1>
+          <p className="text-slate-500">Моля, прегледайте поръчката си и изберете метод на плащане</p>
+        </header>
 
-        {/* Order Summary */}
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Обобщение на поръчката</h2>
-          
-          <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
-            {cart.items.map((item) => (
-              <div key={item.product.id} className="flex justify-between text-xs sm:text-sm gap-2">
-                <span className="text-gray-600 truncate flex-1 min-w-0">
-                  {item.product.name} x {item.quantity}
-                </span>
-                <span className="font-medium whitespace-nowrap">
-                  {formatPrice(item.product.price * item.quantity, item.product.currency)}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="border-t border-gray-200 pt-2 sm:pt-3 space-y-2">
-            <div className="flex justify-between text-xs sm:text-sm">
-              <span className="text-gray-600">Междинна сума:</span>
-              <span className="font-medium">{formatPrice(cart.subtotal, 'EUR')}</span>
-            </div>
-            <div className="flex justify-between text-xs sm:text-sm">
-              <span className="text-gray-600">ДДС (20%):</span>
-              <span className="font-medium">{formatPrice(cart.tax, 'EUR')}</span>
-            </div>
-            <div className="flex justify-between text-base sm:text-lg font-bold">
-              <span>Общо:</span>
-              <span className="text-rose-600">{formatPrice(cart.total, 'EUR')}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Selection of Payment Method */}
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Начин на плащане</h2>
-          <div className="space-y-4">
-            <div 
-              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${paymentMethod === 'econt' ? 'border-rose-500 bg-rose-50' : 'border-gray-200'}`}
-              onClick={() => setPaymentMethod('econt')}
-            >
-              <div className="flex items-center justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-12 space-y-8">
+            
+            {/* Payment Methods Section */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div className="p-6 sm:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                 <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'econt' ? 'border-rose-500' : 'border-gray-300'}`}>
-                    {paymentMethod === 'econt' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
+                  <div className="bg-red-600 p-2 rounded-lg text-white">
+                    <Wallet className="w-5 h-5" />
                   </div>
-                  <div>
-                    <span className="font-semibold text-gray-900">Наложен платеж (с Еконт)</span>
-                    <p className="text-xs text-gray-500">Плащане при получаване на куриера</p>
-                  </div>
-                </div>
-                <img src="/econt-logo.png" alt="Econt" className="h-8" onError={(e) => (e.currentTarget.style.display = 'none')} />
-              </div>
-
-              {paymentMethod === 'econt' && (
-                <div className="mt-4 border-t pt-4">
-                  <p className="text-sm font-medium mb-2">Изберете адрес за доставка:</p>
-                  <div className="w-full bg-gray-100 rounded overflow-hidden" style={{ minHeight: '500px' }}>
-                    <iframe 
-                      src={iframeUrl}
-                      className="w-full border-0" 
-                      style={{ height: '600px' }}
-                      title="Econt Delivery"
-                    />
-                  </div>
-                  {econtData && (
-                    <div className="mt-3 p-3 bg-green-50 border border-green-100 rounded text-sm text-green-800">
-                      <strong>Избран адрес:</strong> {econtData.address || econtData.office_code}, {econtData.city_name}
-                      <br />
-                      <strong>Доставка:</strong> {econtData.shipping_price_cod} {econtData.shipping_price_currency}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div 
-              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${paymentMethod === 'stripe' ? 'border-rose-500 bg-rose-50' : 'border-gray-200'}`}
-              onClick={() => setPaymentMethod('stripe')}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'stripe' ? 'border-rose-500' : 'border-gray-300'}`}>
-                    {paymentMethod === 'stripe' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-900">С карта (Stripe)</span>
-                    <p className="text-xs text-gray-500">Сигурно плащане с кредитна или дебитна карта</p>
-                  </div>
-                </div>
-                <div className="flex gap-1">
-                  <img src="https://js.stripe.com/v3/fingerprinted/img/visa-7ad57358.svg" alt="Visa" className="h-4" />
-                  <img src="https://js.stripe.com/v3/fingerprinted/img/mastercard-4d88444a.svg" alt="Mastercard" className="h-4" />
+                  <h2 className="text-xl font-bold text-slate-900">Начин на плащане</h2>
                 </div>
               </div>
               
-              {paymentMethod === 'stripe' && (
-                <div className="mt-4 border-t pt-4">
-                  <p className="text-sm text-gray-600">
-                    Ще бъдете пренасочени към защитена страница на Stripe за завършване на плащането.
-                  </p>
+              <div className="p-6 sm:p-8 space-y-6">
+                {/* 1. Econt (Cash on Delivery) - Priority #1 */}
+                <div 
+                  className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'econt' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-100'}`}
+                  onClick={() => setPaymentMethod('econt')}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className={`mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'econt' ? 'border-blue-600' : 'border-slate-300'}`}>
+                        {paymentMethod === 'econt' && <div className="w-3 h-3 rounded-full bg-blue-600" />}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-slate-900 text-lg">Наложен платеж (с Еконт)</h3>
+                          <img src="/econt-logo.png" alt="Econt" className="h-5 object-contain" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                        </div>
+                        <p className="text-sm text-slate-600 mt-1">
+                          Плащане в брой или с карта при получаване от куриера.
+                        </p>
+                      </div>
+                    </div>
+                    <Truck className={`w-6 h-6 ${paymentMethod === 'econt' ? 'text-blue-600' : 'text-slate-300'}`} />
+                  </div>
+
+                  {paymentMethod === 'econt' && (
+                    <div className="mt-6 space-y-4 animate-in fade-in duration-300">
+                      <label className="block text-sm font-semibold text-slate-700">Изберете офис или адрес за доставка:</label>
+                      <div className="w-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-inner" style={{ minHeight: '650px' }}>
+                        <iframe 
+                          src={iframeUrl}
+                          className="w-full border-0" 
+                          style={{ height: '650px' }}
+                          title="Econt Delivery"
+                        />
+                      </div>
+                      
+                      {econtData && (
+                        <div className="mt-4 p-5 bg-blue-100/50 border border-blue-200 rounded-xl flex items-start gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <div className="bg-blue-600 p-1.5 rounded-full text-white mt-0.5">
+                            <ChevronRight className="w-4 h-4" />
+                          </div>
+                          <div className="text-sm text-blue-900">
+                            <p className="font-bold mb-1">Избран адрес за доставка:</p>
+                            <p className="opacity-90">{econtData.address || econtData.office_code}, {econtData.city_name}</p>
+                            <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-blue-700 flex items-center gap-2">
+                               <span>Доставка: {econtData.shipping_price_cod} {econtData.shipping_price_currency}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              )}
+
+                {/* 2. Stripe (Card) - Under Econt */}
+                <div 
+                  className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'stripe' ? 'border-red-600 bg-red-50/30' : 'border-slate-100'}`}
+                  onClick={() => setPaymentMethod('stripe')}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className={`mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'stripe' ? 'border-red-600' : 'border-slate-300'}`}>
+                        {paymentMethod === 'stripe' && <div className="w-3 h-3 rounded-full bg-red-600" />}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-slate-900 text-lg">С карта (Stripe)</h3>
+                        <p className="text-sm text-slate-600 mt-1">
+                          Сигурно онлайн плащане с Вашата дебитна или кредитна карта.
+                        </p>
+                      </div>
+                    </div>
+                    <CreditCard className={`w-6 h-6 ${paymentMethod === 'stripe' ? 'text-red-600' : 'text-slate-300'}`} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Order Summary */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+               <div className="p-6 sm:p-8 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
+                  <div className="bg-slate-900 p-2 rounded-lg text-white">
+                    <CreditCard className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-xl font-bold text-slate-900">Обобщение на поръчката</h2>
+              </div>
+              
+              <div className="p-6 sm:p-8">
+                <div className="space-y-4 mb-8">
+                  {cart.items.map((item) => (
+                    <div key={item.product.id} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 rounded-lg transition-colors">
+                      <div className="flex flex-col">
+                        <span className="text-slate-900 font-medium">
+                          {item.product.name}
+                        </span>
+                        <span className="text-slate-500 text-xs">Количество: {item.quantity}</span>
+                      </div>
+                      <span className="font-bold text-slate-900">
+                        {formatPrice(item.product.price * item.quantity, item.product.currency)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-slate-50 rounded-2xl p-6 space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Междинна сума:</span>
+                    <span className="font-medium text-slate-900">{formatPrice(cart.subtotal, 'EUR')}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">ДДС (20%):</span>
+                    <span className="font-medium text-slate-900">{formatPrice(cart.tax, 'EUR')}</span>
+                  </div>
+                  <div className="h-px bg-slate-200 my-2" />
+                  <div className="flex justify-between text-xl font-extrabold">
+                    <span className="text-slate-900">Общо:</span>
+                    <span className="text-red-600">{formatPrice(cart.total, 'EUR')}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {error && (
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4 animate-in shake duration-500">
+                <div className="bg-amber-500 text-white p-1 rounded-full">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <p className="text-amber-900 font-medium text-sm">{error}</p>
+              </div>
+            )}
+
+            <div className="pt-4">
+              <Button
+                size="lg"
+                onClick={handleCheckout}
+                disabled={loading}
+                className="w-full h-16 text-lg font-bold rounded-2xl bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200 transition-all active:scale-[0.98]"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-6 h-6 mr-3 animate-spin" />
+                    Обработка...
+                  </>
+                ) : (
+                  paymentMethod === 'stripe' ? 'Продължи към плащане' : 'Завърши поръчката'
+                )}
+              </Button>
             </div>
           </div>
         </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-800">{error}</p>
-          </div>
-        )}
-
-        {/* Checkout Button */}
-        <Button
-          size="lg"
-          onClick={handleCheckout}
-          disabled={loading}
-          className="w-full"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Зареждане...
-            </>
-          ) : (
-            'Продължи към плащане'
-          )}
-        </Button>
       </div>
     </div>
   );

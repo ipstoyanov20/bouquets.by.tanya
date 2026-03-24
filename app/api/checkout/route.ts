@@ -1,111 +1,75 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe, APP_URL } from '@/lib/stripe';
-import { checkoutSchema } from '@/lib/validations';
-import { getProductById } from '@/lib/products';
-import { ZodError } from 'zod';
+import { stripe } from '@/lib/stripe';
 
-// POST /api/checkout - Create Stripe checkout session
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
-    const body = await request.json();
-    const validatedData = checkoutSchema.parse(body);
+    const { items, customerName, customerEmail } = await request.json();
 
-    // Validate all products exist and are in stock
-    const lineItems = [];
-    for (const item of validatedData.items) {
-      const product = getProductById(item.productId);
-      
-      if (!product) {
-        return NextResponse.json(
-          { error: `Product with ID ${item.productId} not found` },
-          { status: 400 }
-        );
-      }
-
-      if (!product.inStock) {
-        return NextResponse.json(
-          { error: `Product "${product.name}" is out of stock` },
-          { status: 400 }
-        );
-      }
-
-      // Create Stripe line item
-      lineItems.push({
-        price_data: {
-          currency: product.currency.toLowerCase(),
-          product_data: {
-            name: product.name,
-            description: product.description,
-            images: product.images.map(img => {
-              // Properly encode image URLs to handle Cyrillic and special characters
-              const imagePath = img.split('/').map(segment => encodeURIComponent(segment)).join('/');
-              return `${APP_URL}${imagePath}`;
-            }),
-            metadata: {
-              product_id: product.id,
-              ...product.metadata,
-            },
-          },
-          unit_amount: product.price, // Price in cents
-        },
-        quantity: item.quantity,
-        adjustable_quantity: {
-          enabled: true,
-          minimum: 1,
-          maximum: 10,
-        },
-      });
+    if (!items || items.length === 0) {
+      return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
     }
 
-    // Create Stripe Checkout Session
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+
+    // Convert items for Stripe
+    const lineItems = items.map((item: any) => {
+      // Robust image URL handling
+      let imageList: string[] = [];
+      if (item.image) {
+        if (item.image.startsWith('http')) {
+          imageList = [item.image];
+        } else if (!appUrl.includes('localhost')) {
+          // Only add images if NOT on localhost, as Stripe requires public URLs
+          // and they must be properly encoded (e.g. spaces replaced with %20)
+          const baseUrl = appUrl.endsWith('/') ? appUrl.slice(0, -1) : appUrl;
+          const imagePath = item.image.startsWith('/') ? item.image : `/${item.image}`;
+          imageList = [encodeURI(`${baseUrl}${imagePath}`)];
+        } else {
+          // If on localhost, we omit images to avoid Stripe validation errors
+          imageList = [];
+        }
+      }
+
+      return {
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: item.name,
+            images: imageList,
+          },
+          unit_amount: Math.round(item.price), // price is in cents
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
+      payment_method_types: ['card'],
       line_items: lineItems,
-      success_url: `${APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/cart?canceled=true`,
-      customer_email: validatedData.customerEmail,
+      mode: 'payment',
+      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/checkout`,
+      customer_email: customerEmail || undefined,
+      shipping_address_collection: {
+        allowed_countries: ['BG'],
+      },
+      billing_address_collection: 'required',
       phone_number_collection: {
         enabled: true,
       },
-      billing_address_collection: 'required',
-      shipping_address_collection: {
-        allowed_countries: ['BG'], // Bulgaria only, expand as needed
-      },
-      automatic_tax: {
-        enabled: false, // We calculate tax manually
-      },
+      submit_type: 'pay',
       metadata: {
-        order_source: 'web',
+        customer_name: customerName || '',
+        items: items.map((i: any) => `${i.name} (${i.quantity})`).join(', ').substring(0, 500),
       },
-      expires_at: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes
     });
 
-    // Return session URL to redirect user to Stripe Checkout
-    return NextResponse.json({
-      sessionId: session.id,
-      url: session.url,
-    });
-
+    return NextResponse.json({ url: session.url, id: session.id });
   } catch (error) {
-    console.error('Checkout error:', error);
-
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request data', details: error.issues },
-        { status: 400 }
-      );
-    }
-
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
-    }
-
+    console.error('Stripe checkout error:', error);
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      { error: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }
     );
   }
