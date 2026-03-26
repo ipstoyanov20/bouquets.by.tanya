@@ -6,6 +6,8 @@ import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 import { Loader2, Truck, CreditCard, ChevronRight, Wallet } from 'lucide-react';
+import { Skeleton } from '@/components/ui/Skeleton';
+
 
 interface EcontData {
   id: string;
@@ -30,16 +32,18 @@ export default function CheckoutPage() {
   const [error, setError] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'econt' | 'stripe'>('econt');
   const [econtData, setEcontData] = useState<EcontData | null>(null);
+  const [iframeLoading, setIframeLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (cart.items.length === 0) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && cart.items.length === 0) {
       router.push('/cart');
     }
-  }, [cart.items.length, router]);
-
-  if (cart.items.length === 0) {
-    return null;
-  }
+  }, [mounted, cart.items.length, router]);
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -146,6 +150,14 @@ export default function CheckoutPage() {
 
   const iframeUrl = `${econtCalcUrl}?id_shop=${econtShopId}&order_total=${orderTotalBgn.toFixed(2)}&order_currency=BGN&order_weight=${totalWeight}`;
 
+  if (!mounted || cart.items.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-red-600 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-slate-50 min-h-screen py-10 sm:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -172,7 +184,12 @@ export default function CheckoutPage() {
                 {/* 1. Econt (Cash on Delivery) - Priority #1 */}
                 <div 
                   className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'econt' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-100'}`}
-                  onClick={() => setPaymentMethod('econt')}
+                  onClick={() => {
+                    if (paymentMethod !== 'econt') {
+                      setPaymentMethod('econt');
+                      setIframeLoading(true);
+                    }
+                  }}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
@@ -195,11 +212,22 @@ export default function CheckoutPage() {
                   {paymentMethod === 'econt' && (
                     <div className="mt-6 space-y-4 animate-in fade-in duration-300">
                       <label className="block text-sm font-semibold text-slate-700">Изберете офис или адрес за доставка:</label>
-                      <div className="w-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-inner" style={{ minHeight: '650px' }}>
+                      <div className="w-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-inner relative" style={{ minHeight: '650px' }}>
+                        {iframeLoading && (
+                          <div className="absolute inset-0 p-4 space-y-4 bg-white z-10">
+                            <Skeleton className="h-10 w-3/4 mb-6" />
+                            <div className="grid grid-cols-2 gap-4">
+                              <Skeleton className="h-32 w-full" />
+                              <Skeleton className="h-32 w-full" />
+                            </div>
+                            <Skeleton className="h-64 w-full" />
+                          </div>
+                        )}
                         <iframe 
                           src={iframeUrl}
-                          className="w-full border-0" 
+                          className={`w-full border-0 transition-opacity duration-300 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`} 
                           style={{ height: '650px' }}
+                          onLoad={() => setIframeLoading(false)}
                           title="Econt Delivery"
                         />
                       </div>
@@ -213,7 +241,7 @@ export default function CheckoutPage() {
                             <p className="font-bold mb-1">Избран адрес за доставка:</p>
                             <p className="opacity-90">{econtData.address || econtData.office_code}, {econtData.city_name}</p>
                             <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-blue-700 flex items-center gap-2">
-                               <span>Доставка: {econtData.shipping_price_cod} {econtData.shipping_price_currency}</span>
+                               <span>Доставка: <span className="text-green-600 font-bold">БЕЗПЛАТНА (поема се от нас)</span></span>
                             </div>
                           </div>
                         </div>

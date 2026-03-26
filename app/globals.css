@@ -39,14 +39,6 @@ main p, main span:not([class*="text-"]), main div:not([class*="bg-"]) {
   color: inherit;
 }
 
-/* Remove any transforms or effects that could cause visual artifacts */
-* {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
 /* Ensure proper rendering without artifacts */
 footer {
   isolation: isolate;

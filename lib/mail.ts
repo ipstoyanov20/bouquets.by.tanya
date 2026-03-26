@@ -1,6 +1,8 @@
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+
 
 interface OrderConfirmationData {
   orderId: string;
@@ -30,7 +32,7 @@ export const sendOrderConfirmationEmail = async (data: OrderConfirmationData) =>
 
   try {
     const result = await resend.emails.send({
-      from: 'Bouquets by Tanya <orders@bouquetsbytanya.bg>',
+      from: `Bouquets by Tanya <${FROM_EMAIL}>`,
       to: customerEmail,
       subject: `Потвърждение на поръчка #${orderId}`,
       html: `
@@ -69,6 +71,9 @@ export const sendOrderConfirmationEmail = async (data: OrderConfirmationData) =>
             С уважение,<br>
             <strong>Екипът на Букети от Таня</strong>
           </p>
+          <div style="border-top: 1px solid #eee; margin-top: 20px; padding-top: 20px; color: #999; font-size: 0.8em; text-align: center;">
+            Bouquets by Tanya • София, България • ж.к. Младост 4, ул. Д-р Атанас Москов
+          </div>
         </div>
       `,
     });

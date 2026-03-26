@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     // In a real app, you'd save the order to a database here
     
     try {
-      await sendOrderConfirmationEmail({
+      const emailResult = await sendOrderConfirmationEmail({
         orderId: `STRIPE-${session.id.slice(-8)}`,
         customerName: session.customer_details?.name || 'Customer',
         customerEmail: session.customer_details?.email || '',
@@ -36,6 +36,9 @@ export async function POST(request: NextRequest) {
         items: [], // You'd fetch items from session.listLineItems
         address: session.shipping_details?.address?.line1 || 'Shipping Address',
       });
+      if (!emailResult.success) {
+        console.error('Resend failed to send Stripe confirmation email:', emailResult.error);
+      }
     } catch (emailErr) {
       console.error('Failed to send Stripe confirmation email:', emailErr);
     }

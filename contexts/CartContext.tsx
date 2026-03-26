@@ -112,21 +112,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items]);
 
-  const addItem = (product: Product, customRoseCount?: number, customPrice?: number) => {
+  const addItem = React.useCallback((product: Product, customRoseCount?: number, customPrice?: number) => {
     dispatch({ type: 'ADD_ITEM', payload: { product, customRoseCount, customPrice } });
-  };
+  }, [dispatch]);
 
-  const removeItem = (productId: string) => {
+  const removeItem = React.useCallback((productId: string) => {
     dispatch({ type: 'REMOVE_ITEM', payload: productId });
-  };
+  }, [dispatch]);
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = React.useCallback((productId: string, quantity: number) => {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
-  };
+  }, [dispatch]);
 
-  const clearCart = () => {
+  const clearCart = React.useCallback(() => {
     dispatch({ type: 'CLEAR_CART' });
-  };
+  }, [dispatch]);
 
   const { subtotal, tax, total } = calculateCartTotals(items);
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);

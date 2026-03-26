@@ -79,17 +79,22 @@ function SuccessContent() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/products" className="flex-1">
-              <Button size="lg" className="w-full h-14 rounded-xl bg-red-600 hover:bg-red-700 shadow-md transition-all active:scale-95">
-                Продължи пазаруването
-              </Button>
-            </Link>
-            <Link href="/" className="flex-1">
-              <Button size="lg" variant="outline" className="w-full h-14 rounded-xl border-slate-200 hover:bg-slate-50 text-slate-700 bg-white">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Начална страница
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              className="flex-1 h-14 rounded-xl bg-red-600 hover:bg-red-700 shadow-md transition-all active:scale-95"
+              onClick={() => router.push('/products')}
+            >
+              Продължи пазаруването
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="flex-1 h-14 rounded-xl border-slate-200 hover:bg-slate-50 text-slate-700 bg-white"
+              onClick={() => router.push('/')}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Начална страница
+            </Button>
           </div>
         </div>
         

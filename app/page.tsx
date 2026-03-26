@@ -18,7 +18,9 @@ export default function Home() {
               Бутикова красота за <span className="text-rose-600">специални моменти</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
-               Изкуствени цветни букети от висококачествени материали Перфектен подарък, който остава бутиков <br className="hidden sm:block" /> Носим по Еконт в цялата страна <img src="/econt-logo.png" alt="Econt Logo" className="inline-block rounded-2xl w-12 sm:w-16 h-auto ml-2 align-middle" />
+               Изкуствени цветни букети от висококачествени материали. Перфектен подарък, който остава вечен. <br className="hidden sm:block" /> 
+               <span className="text-green-600 font-bold">БЕЗПЛАТНА ДОСТАВКА</span> с Еконт в цялата страна 
+               <img src="/econt-logo.png" alt="Econt Logo" className="inline-block rounded-2xl w-12 sm:w-16 h-auto ml-2 align-middle" />
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/products" className="w-full sm:w-auto">
@@ -58,9 +60,9 @@ export default function Home() {
               <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-rose-100 rounded-full mb-3 sm:mb-4">
                 <Truck className="w-7 h-7 sm:w-8 sm:h-8 text-rose-600" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">Бърза доставка</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">Безплатна доставка</h3>
               <p className="text-sm sm:text-base text-gray-600">
-                Носим по Еконт - доставяме бързо и сигурно до вашия адрес
+                Доставката се поема от нас! Изпращаме с Еконт бързо и сигурно.
               </p>
             </div>
           </div>

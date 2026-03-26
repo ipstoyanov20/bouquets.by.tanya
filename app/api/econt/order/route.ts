@@ -47,10 +47,10 @@ export async function POST(request: NextRequest) {
         senderAddress: {
           city: {
             country: { code3: "BGR" },
-            name: "Русе",
-            postCode: "7000"
+            name: "София",
+            postCode: "1715"
           },
-          street: "Алея Младост",
+          street: "ул. Д-р Атанас Москов",
           num: "7"
         },
         receiverClient: {
@@ -86,7 +86,8 @@ export async function POST(request: NextRequest) {
         },
         // Standard options for flowers: Review before paying
         payAfterAccept: 1,
-        paymentReceiverMethod: "cash", // Receiver pays the shipping cost
+        // The sender (Bouquets by Tanya) pays for the shipping
+        paymentSenderMethod: "cash",
       },
       mode: "create"
     };
@@ -121,16 +122,16 @@ export async function POST(request: NextRequest) {
     // Send order confirmation email
     let emailSent = false;
     try {
-      await sendOrderConfirmationEmail({
+      const emailResult = await sendOrderConfirmationEmail({
         orderId: orderNumber,
         customerName: customerInfo.name,
         customerEmail: customerInfo.email,
         total: order_total,
         items: items,
         waybillNumber: waybillNumber,
-        address: `${customerInfo.address || customerInfo.officeCode}, ${customerInfo.cityName}`,
+        address: `${customerInfo.address || customerInfo.officeCode || ""}, ${customerInfo.cityName}`,
       });
-      emailSent = true;
+      emailSent = emailResult.success;
     } catch (emailErr) {
       console.error('Failed to send confirmation email:', emailErr);
     }
