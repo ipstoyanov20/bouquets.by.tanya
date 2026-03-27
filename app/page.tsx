@@ -2,8 +2,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
 import { getFeaturedProducts } from "@/lib/products";
-import TrustedClients from "@/components/TrustedClients";
+import { AnimatedReviews } from "@/components/AnimatedReviews";
 import { Heart, Shield, Truck } from "lucide-react";
+import TrustedClients from "@/components/TrustedClients";
 
 export default function Home() {
   const featuredProducts = getFeaturedProducts();
@@ -11,27 +12,34 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-linear-to-r from-rose-50 to-pink-50 py-12 sm:py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-slate-50/50 pt-16 sm:pt-20 md:pt-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
           <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-              Бутикова красота за <span className="text-rose-600">специални моменти</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight tracking-tight">
+              Бутикова красота за <span className="text-rose-600 block sm:inline">специални моменти</span>
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 sm:mb-10 max-w-3xl mx-auto px-4 leading-relaxed">
                Изкуствени цветни букети от висококачествени материали. Перфектен подарък, който остава вечен. <br className="hidden sm:block" /> 
                <span className="text-green-600 font-bold">БЕЗПЛАТНА ДОСТАВКА</span> с Еконт в цялата страна 
-               <img src="/econt-logo.png" alt="Econt Logo" className="inline-block rounded-2xl w-12 sm:w-16 h-auto ml-2 align-middle" />
+               <img src="/econt-logo.png" alt="Econt Logo" className="inline-block rounded-2xl w-14 sm:w-18 h-auto ml-3 align-middle hover:scale-110 transition-transform" />
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-6">
               <Link href="/products" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto">Разгледай букети</Button>
+                <Button size="lg" className="w-full sm:w-80 h-16 text-lg rounded-2xl bg-rose-600 hover:bg-rose-700 shadow-xl shadow-rose-200 transition-all active:scale-95">
+                  Разгледай букети
+                </Button>
               </Link>
               <Link href="/about" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">Научи повече</Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-60 h-16 text-lg rounded-2xl border-rose-200 hover:bg-rose-50 text-rose-600">
+                  Научи повече
+                </Button>
               </Link>
             </div>
           </div>
         </div>
+
+        {/* Animated Reviews Section */}
+        <AnimatedReviews />
       </section>
 
       {/* Features */}

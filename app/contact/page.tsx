@@ -172,7 +172,7 @@ export default function ContactPage() {
                   <div className="ml-3 sm:ml-4">
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900">Адрес</h3>
                     <p className="text-sm sm:text-base text-gray-600">
-                      София, България
+                      ул. Д-р Атанас Москов 7, София 1715
                     </p>
                   </div>
                 </div>

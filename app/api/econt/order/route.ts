@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendOrderConfirmationEmail } from '@/lib/mail';
 
-const ECONT_API_URL = 'https://demo.econt.com/ee/services/Shipments/LabelService.createLabel.json';
+const ECONT_API_URL = process.env.ECONT_API_URL || 'https://ee.econt.com/services/Shipments/LabelService.createLabel.json';
 const ECONT_AUTH = process.env.ECONT_PRIVATE_KEY || 'Basic aWFzcC1kZXY6MUFzcC1kZXY=';
 
 
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     const econtPayload = {
       label: {
         senderClient: {
+          id: process.env.NEXT_PUBLIC_ECONT_SHOP_ID || "8663661",
           name: "Bouquets by Tanya",
           phones: ["+359886611719"]
         },
@@ -86,13 +87,14 @@ export async function POST(request: NextRequest) {
         },
         // Standard options for flowers: Review before paying
         payAfterAccept: 1,
-        // The sender (Bouquets by Tanya) pays for the shipping
-        paymentSenderMethod: "cash",
+        // The receiver (customer) pays for the shipping
+        paymentReceiverMethod: "cash",
       },
       mode: "create"
     };
 
-    console.log('Sending CreateLabel to Econt:', JSON.stringify(econtPayload, null, 2));
+    console.log('Sending CreateLabel request to:', ECONT_API_URL);
+    console.log('Payload:', JSON.stringify(econtPayload, null, 2));
 
     const response = await fetch(ECONT_API_URL, {
       method: 'POST',
@@ -103,7 +105,31 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(econtPayload),
     });
 
-    const data = await response.json();
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    let data;
+    const responseText = await response.text();
+    
+    try {
+      if (contentType && contentType.includes('application/json')) {
+        data = JSON.parse(responseText);
+      } else {
+        console.error('Econt API returned non-JSON response:', responseText.substring(0, 500));
+        return NextResponse.json(
+          { 
+            error: 'Econt сървърът върна неочакван отговор (HTML). Моля, проверете настройките си.',
+            details: responseText.substring(0, 200)
+          },
+          { status: 500 }
+        );
+      }
+    } catch (parseError) {
+      console.error('Error parsing Econt response:', parseError);
+      return NextResponse.json(
+        { error: 'Грешка при обработка на отговора от Еконт', details: responseText.substring(0, 200) },
+        { status: 500 }
+      );
+    }
 
     if (!response.ok || data.error) {
       console.error('Econt API Error:', data);

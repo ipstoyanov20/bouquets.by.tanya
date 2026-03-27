@@ -125,7 +125,7 @@ export default function TermsPage() {
             <p className="text-gray-700 mt-2">
               <strong>Имейл:</strong> info@bouquetsbytanya.bg<br />
               <strong>Телефон:</strong> +359 886 611 719<br />
-              <strong>Адрес:</strong> София, България
+              <strong>Адрес:</strong> ул. Д-р Атанас Москов 7, София 1715
             </p>
           </section>
         </div>

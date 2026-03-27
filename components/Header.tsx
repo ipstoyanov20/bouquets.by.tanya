@@ -17,6 +17,7 @@ export function Header() {
     { name: 'Продукти', href: '/products' },
     { name: 'За нас', href: '/about' },
     { name: 'Контакти', href: '/contact' },
+    { name: 'Отзиви', href: '/reviews' },
   ];
 
   return (

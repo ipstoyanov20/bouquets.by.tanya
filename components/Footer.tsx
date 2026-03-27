@@ -76,6 +76,14 @@ export function Footer() {
                   Контакти
                 </Link>
               </li>
+              <li>
+                <Link 
+                  href="/reviews" 
+                  className="text-gray-300 hover:text-rose-400 transition-colors duration-200 text-sm inline-block"
+                >
+                  Отзиви
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -130,7 +138,7 @@ export function Footer() {
               </li>
               <li className="flex items-start">
                 <MapPin className="w-5 h-5 mr-3 mt-0.5 shrink-0 text-gray-400" />
-                <span className="text-gray-300 text-sm">София, България</span>
+                <span className="text-gray-300 text-sm">ул. Д-р Атанас Москов 7, София 1715</span>
               </li>
             </ul>
           </div>
