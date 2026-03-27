@@ -57,7 +57,7 @@ fbq('track', 'PageView');
 
             <div className="bg-rose-50 border-b border-rose-100 text-rose-700 text-sm py-2">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-3">
-                <span className="font-semibold">Доверие от над 1,000 щастливи клиенти</span>
+                <span className="font-semibold">Доверие от над 100 щастливи клиенти</span>
                 <img src="/econt-logo.png" alt="Econt" className="h-5 inline-block" />
               </div>
             </div>
