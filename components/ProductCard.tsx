@@ -42,6 +42,7 @@ export function ProductCard({ product }: ProductCardProps) {
       'бяло': '#FFFFFF',
       'кремаво': '#FFFDD0',
       'прасковено': '#FFDAB9',
+      'оранжево': '#FF8C00',
     };
 
     const colorText = product.metadata.color.toLowerCase();

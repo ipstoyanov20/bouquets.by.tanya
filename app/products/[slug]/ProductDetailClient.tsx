@@ -6,6 +6,7 @@ import { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
 import { RoseCountSelector } from '@/components/RoseCountSelector';
+import { calculateBouquetPrice } from '@/lib/products';
 import { formatPrice } from '@/lib/utils';
 import { ShoppingCart, Check, Play } from 'lucide-react';
 
@@ -20,20 +21,17 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const [roseCount, setRoseCount] = useState(product.metadata?.roses_count || 11);
 
   const handleAddToCart = () => {
-    const originalRoseCount = product.metadata?.roses_count || 11;
-    const pricePerRose = product.price / originalRoseCount;
-    const customPrice = Math.round(pricePerRose * roseCount);
+    // 1 роза = 1.00 EUR (100 ст.) + 1 добавка = 0.50 EUR (50 ст.)
+    const customPrice = calculateBouquetPrice(roseCount, 1);
     
     addItem(product, roseCount, customPrice);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
 
-  // Calculate current price based on rose count
+  // Calculate current price based on rose count: roses × 100¢ + 1 addon × 50¢
   const calculateCurrentPrice = () => {
-    const originalRoseCount = product.metadata?.roses_count || 11;
-    const pricePerRose = product.price / originalRoseCount;
-    return Math.round(pricePerRose * roseCount);
+    return calculateBouquetPrice(roseCount, 1);
   };
 
   const currentPrice = calculateCurrentPrice();
