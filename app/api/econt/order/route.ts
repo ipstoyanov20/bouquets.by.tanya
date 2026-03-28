@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const { items, customerInfo, order_total } = body;
 
     // Create unique order number for tracking
-    const orderNumber = `TANYA-${Date.now()}`;
+    const orderNumber = `TANQ-${Date.now()}`;
 
     // Calculate total weight
     const totalWeight = items.reduce((acc: number, item: OrderItem) => acc + (item.totalWeight || 1), 0);
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       label: {
         senderClient: {
           id: process.env.NEXT_PUBLIC_ECONT_SHOP_ID || "8663661",
-          name: "Bouquets by Tanya",
+          name: "Bouquets By Tanq",
           phones: ["+359886611719"]
         },
         senderAddress: {

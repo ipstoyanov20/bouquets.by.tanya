@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Условия за ползване - bouquets.by.tanya',
+  title: 'Условия за ползване - Bouquets By Tanq',
   description: 'Общи условия за ползване на услугата',
 };
 
@@ -17,7 +17,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Приемане на условията</h2>
             <p className="text-gray-700">
-              Като използвате уебсайта на bouquets.by.tanya, вие се съгласявате да спазвате
+            Като използвате уебсайта на Bouquets By Tanq, вие се съгласявате да спазвате
               тези условия за ползване. Ако не сте съгласни с тези условия, моля не използвайте
               нашия уебсайт.
             </p>
@@ -88,7 +88,7 @@ export default function TermsPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Интелектуална собственост</h2>
             <p className="text-gray-700">
               Всички изображения, текстове, дизайни и друго съдържание на този уебсайт са собственост
-              на bouquets.by.tanya и са защитени от авторско право. Забранено е копирането,
+              на Bouquets By Tanq и са защитени от авторско право. Забранено е копирането,
               разпространението или използването без писмено разрешение.
             </p>
           </section>
@@ -96,7 +96,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Ограничение на отговорността</h2>
             <p className="text-gray-700">
-              bouquets.by.tanya не носи отговорност за непреки, случайни или последващи щети,
+            Bouquets By Tanq не носи отговорност за непреки, случайни или последващи щети,
               произтичащи от използването на нашия уебсайт или продукти, освен когато е изискано от закона.
             </p>
           </section>

@@ -10,11 +10,11 @@ import { ToastProvider } from "@/contexts/ToastContext";
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "bouquets.by.tanya - Изкуствени цветни букети",
+  title: "Bouquets By Tanq - Изкуствени цветни букети",
   description: "Висококачествени изкуствени цветни букети за всеки повод. Ръчно изработени с внимание към детайла.",
   keywords: "букети, изкуствени цветя, рози, подаръци, България",
   openGraph: {
-    title: "bouquets.by.tanya",
+    title: "Bouquets By Tanq",
     description: "Изкуствени цветни букети от висококачествени материали",
     type: "website",
   },

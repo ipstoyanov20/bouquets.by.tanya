@@ -20,12 +20,12 @@ export async function generateMetadata(
 
   if (!product) {
     return {
-      title: 'Product Not Found | Bouquets by Tanya',
+      title: 'Product Not Found | Bouquets By Tanq',
     };
   }
 
   return {
-    title: `${product.name} | Bouquets by Tanya`,
+    title: `${product.name} | Bouquets By Tanq`,
     description: product.description,
     openGraph: {
       title: product.name,

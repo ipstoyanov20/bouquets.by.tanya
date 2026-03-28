@@ -21,7 +21,7 @@ export function Footer() {
           {/* Brand Section - Takes 2 columns on large screens */}
           <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
-              bouquets.by.tanya
+              Bouquets By Tanq
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed mb-4 sm:mb-6 max-w-sm">
               Изкуствени цветни букети от висококачествени материали.
@@ -147,7 +147,7 @@ export function Footer() {
         {/* Bottom copyright section */}
         <div className="mt-12 pt-8 border-t border-gray-800">
           <p className="text-center text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} bouquets.by.tanya. Всички права запазени.
+            &copy; {new Date().getFullYear()} Bouquets By Tanq. Всички права запазени.
           </p>
         </div>
       </div>

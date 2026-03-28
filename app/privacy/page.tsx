@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Политика за поверителност - bouquets.by.tanya',
+  title: 'Политика за поверителност - Bouquets By Tanq',
   description: 'Политика за защита на личните данни',
 };
 
@@ -17,7 +17,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Въведение</h2>
             <p className="text-gray-700">
-              bouquets.by.tanya ("ние", "нас", "нашият") се ангажира да защитава вашата поверителност.
+            Bouquets By Tanq ("ние", "нас", "нашият") се ангажира да защитава вашата поверителност.
               Тази политика за поверителност обяснява как събираме, използваме, съхраняваме и защитаваме
               вашата лична информация, когато използвате нашия уебсайт.
             </p>

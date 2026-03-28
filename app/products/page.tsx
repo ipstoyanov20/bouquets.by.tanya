@@ -2,7 +2,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { getAllProducts } from "@/lib/products";
 
 export const metadata = {
-  title: "Продукти - bouquets.by.tanya",
+  title: "Продукти - Bouquets By Tanq",
   description: "Разгледайте нашата колекция от изкуствени цветни букети",
 };
 

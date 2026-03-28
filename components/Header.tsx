@@ -28,7 +28,7 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="text-2xl font-bold text-rose-600">bouquets.by.tanya</span>
+            <span className="text-2xl font-bold text-rose-600">Bouquets By Tanq</span>
           </Link>
 
           {/* Desktop Navigation */}

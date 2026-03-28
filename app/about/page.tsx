@@ -1,7 +1,7 @@
 import { Heart, Target, Award } from 'lucide-react';
 
 export const metadata = {
-  title: 'За нас - bouquets.by.tanya',
+  title: 'За нас - Bouquets By Tanq',
   description: 'Научете повече за нашата история и мисия',
 };
 
@@ -20,7 +20,7 @@ export default function AboutPage() {
         {/* Story */}
         <div className="prose prose-sm sm:prose-lg max-w-none mb-8 sm:mb-12">
           <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-4">
-            Добре дошли в <strong>bouquets.by.tanya</strong> – вашето място за изкуствени цветни букети,
+            Добре дошли в <strong>Bouquets By Tanq</strong> – вашето място за изкуствени цветни букети,
             които донасят красота и елегантност в живота ви.
           </p>
           

@@ -32,7 +32,7 @@ export const sendOrderConfirmationEmail = async (data: OrderConfirmationData) =>
 
   try {
     const result = await resend.emails.send({
-      from: `Bouquets by Tanya <${FROM_EMAIL}>`,
+      from: `Bouquets By Tanq <${FROM_EMAIL}>`,
       to: customerEmail,
       subject: `Потвърждение на поръчка #${orderId}`,
       html: `
@@ -69,10 +69,10 @@ export const sendOrderConfirmationEmail = async (data: OrderConfirmationData) =>
           </p>
           <p style="color: #666; font-size: 0.9em; text-align: center;">
             С уважение,<br>
-            <strong>Екипът на Букети от Таня</strong>
+            <strong>Екипът на Bouquets By Tanq</strong>
           </p>
           <div style="border-top: 1px solid #eee; margin-top: 20px; padding-top: 20px; color: #999; font-size: 0.8em; text-align: center;">
-            Bouquets by Tanya • София, България • ж.к. Младост 4, ул. Д-р Атанас Москов
+            Bouquets By Tanq • София, България • ж.к. Младост 4, ул. Д-р Атанас Москов
           </div>
         </div>
       `,
