@@ -7,6 +7,9 @@ import { formatPrice } from '@/lib/utils';
 import { Button } from './ui/Button';
 import { useCart } from '@/contexts/CartContext';
 import { ShoppingCart } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { useToast } from '@/contexts/ToastContext';
 
 interface ProductCardProps {
   product: Product;
@@ -14,10 +17,18 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
+  const { showToast } = useToast();
+  const [showFlyer, setShowFlyer] = useState(false);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     addItem(product);
+    if (!shouldReduceMotion) setShowFlyer(true);
+    showToast(`"${product.name}" е добавен в количката!`);
+    setTimeout(() => setShowFlyer(false), 800);
   };
 
   // Функция за получаване на цветове от metadata
@@ -80,7 +91,8 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group flex flex-col bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow overflow-hidden h-full"
+      className="group flex flex-col bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow overflow-hidden h-full relative"
+      ref={cardRef}
     >
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -102,6 +114,41 @@ export function ProductCard({ product }: ProductCardProps) {
             <span className="text-white font-semibold text-lg">Изчерпан</span>
           </div>
         )}
+
+        {/* Flyer Animation */}
+        <AnimatePresence>
+          {showFlyer && product.images[0] && (
+            <motion.div
+              initial={{ 
+                position: 'fixed',
+                top: cardRef.current?.getBoundingClientRect().top,
+                left: cardRef.current?.getBoundingClientRect().left,
+                width: cardRef.current?.offsetWidth,
+                height: cardRef.current?.offsetHeight,
+                opacity: 1,
+                zIndex: 100,
+                borderRadius: '12px'
+              }}
+              animate={{ 
+                top: 20,
+                left: typeof window !== 'undefined' ? window.innerWidth - 100 : 0,
+                width: 40,
+                height: 40,
+                opacity: 0,
+                scale: 0.5,
+              }}
+              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+              className="pointer-events-none overflow-hidden bg-white shadow-xl"
+            >
+              <Image
+                src={product.images[0]}
+                alt="flyer"
+                fill
+                className="object-cover"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Content */}

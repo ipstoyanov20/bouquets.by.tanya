@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
 import { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
@@ -9,6 +8,9 @@ import { RoseCountSelector } from '@/components/RoseCountSelector';
 import { calculateBouquetPrice } from '@/lib/products';
 import { formatPrice } from '@/lib/utils';
 import { ShoppingCart, Check, Play } from 'lucide-react';
+import { useToast } from '@/contexts/ToastContext';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { useRef, useState } from 'react';
 
 interface ProductDetailClientProps {
   product: Product;
@@ -17,16 +19,24 @@ interface ProductDetailClientProps {
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
   const { addItem } = useCart();
   const [selectedImage, setSelectedImage] = useState(0);
+  const { showToast } = useToast();
   const [added, setAdded] = useState(false);
   const [roseCount, setRoseCount] = useState(product.metadata?.roses_count || 11);
+  const [showFlyer, setShowFlyer] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleAddToCart = () => {
-    // 1 роза = 1.00 EUR (100 ст.) + 1 добавка = 0.50 EUR (50 ст.)
     const customPrice = calculateBouquetPrice(roseCount, 1);
-    
     addItem(product, roseCount, customPrice);
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    if (!shouldReduceMotion) setShowFlyer(true);
+    showToast('Продуктът е добавен в количката!');
+    
+    setTimeout(() => {
+      setAdded(false);
+      setShowFlyer(false);
+    }, 2000);
   };
 
   // Calculate current price based on rose count: roses × 100¢ + 1 addon × 50¢
@@ -66,7 +76,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           {/* Media Gallery */}
           <div>
             {/* Main Media */}
-            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 mb-3 sm:mb-4">
+            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 mb-3 sm:mb-4 relative" ref={imageRef}>
               {allMedia.length > 0 && allMedia[selectedImage] ? (
                 allMedia[selectedImage].endsWith('.mp4') ? (
                   <video
@@ -93,6 +103,44 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                   No Media
                 </div>
               )}
+
+              {/* Flyer Animation */}
+              <AnimatePresence>
+                {showFlyer && !allMedia[selectedImage].endsWith('.mp4') && (
+                  <motion.div
+                    initial={{ 
+                      position: 'fixed',
+                      top: imageRef.current?.getBoundingClientRect().top,
+                      left: imageRef.current?.getBoundingClientRect().left,
+                      width: imageRef.current?.offsetWidth,
+                      height: imageRef.current?.offsetHeight,
+                      opacity: 1,
+                      zIndex: 100,
+                      borderRadius: '12px'
+                    }}
+                    animate={{ 
+                      top: 20, // Approximate header position
+                      left: typeof window !== 'undefined' ? window.innerWidth - 100 : 0,
+                      width: 40,
+                      height: 40,
+                      opacity: 0,
+                      scale: 0.5,
+                    }}
+                    transition={{ 
+                      duration: 0.8, 
+                      ease: [0.4, 0, 0.2, 1] 
+                    }}
+                    className="pointer-events-none overflow-hidden bg-white shadow-xl"
+                  >
+                    <Image
+                      src={allMedia[selectedImage]}
+                      alt="flyer"
+                      fill
+                      className="object-cover"
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Thumbnails */}

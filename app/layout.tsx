@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartProvider } from "@/contexts/CartContext";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
@@ -52,19 +53,21 @@ fbq('track', 'PageView');
       </head>
       <body className={inter.className}>
         <CartProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
+          <ToastProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
 
-            <div className="bg-rose-50 border-b border-rose-100 text-rose-700 text-sm py-2">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-3">
-                <span className="font-semibold">Доверие от над 100 щастливи клиенти</span>
-                <img src="/econt-logo.png" alt="Econt" className="h-5 inline-block" />
+              <div className="bg-rose-50 border-b border-rose-100 text-rose-700 text-sm py-2">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-3">
+                  <span className="font-semibold">Доверие от над 100 щастливи клиенти</span>
+                  <img src="/econt-logo.png" alt="Econt" className="h-5 inline-block" />
+                </div>
               </div>
-            </div>
 
-            <main className="grow">{children}</main>
-            <Footer />
-          </div>
+              <main className="grow">{children}</main>
+              <Footer />
+            </div>
+          </ToastProvider>
         </CartProvider>
       </body>
     </html>

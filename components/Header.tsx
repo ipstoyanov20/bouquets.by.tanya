@@ -6,11 +6,13 @@ import { ShoppingCart, Menu, X } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from './ui/Button';
 import { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 export function Header() {
   const pathname = usePathname();
   const { itemCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const navigation = [
     { name: 'Начало', href: '/' },
@@ -50,11 +52,25 @@ export function Header() {
           <div className="flex items-center gap-4">
             <Link href="/cart">
               <Button variant="outline" size="sm" className="relative">
-                <ShoppingCart className="w-5 h-5" />
+                <motion.div
+                  key={itemCount}
+                  initial={{ scale: 1 }}
+                  animate={{ 
+                    scale: itemCount > 0 && !shouldReduceMotion ? [1, 1.2, 1] : 1,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                </motion.div>
                 {itemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-rose-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <motion.span 
+                    key={`count-${itemCount}`}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="absolute -top-2 -right-2 bg-rose-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-sm"
+                  >
                     {itemCount}
-                  </span>
+                  </motion.span>
                 )}
               </Button>
             </Link>
