@@ -159,19 +159,19 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen py-10 sm:py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <header className="mb-10 text-center">
+    <div className="bg-slate-50 min-h-screen py-8 sm:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <header className="mb-8 sm:mb-12 text-center lg:text-left">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Завършване на поръчката</h1>
           <p className="text-slate-500">Моля, прегледайте поръчката си и изберете метод на плащане</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-12 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-8 space-y-8">
             
             {/* Payment Methods Section */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <div className="p-6 sm:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <div className="p-5 sm:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                 <div className="flex items-center gap-3">
                   <div className="bg-red-600 p-2 rounded-lg text-white">
                     <Wallet className="w-5 h-5" />
@@ -180,10 +180,10 @@ export default function CheckoutPage() {
                 </div>
               </div>
               
-              <div className="p-6 sm:p-8 space-y-6">
+              <div className="p-4 sm:p-8 space-y-4 sm:space-y-6">
                 {/* 1. Econt (Cash on Delivery) - Priority #1 */}
                 <div 
-                  className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'econt' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-100'}`}
+                  className={`p-4 sm:p-6 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'econt' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-100'}`}
                   onClick={() => {
                     if (paymentMethod !== 'econt') {
                       setPaymentMethod('econt');
@@ -212,21 +212,21 @@ export default function CheckoutPage() {
                   {paymentMethod === 'econt' && (
                     <div className="mt-6 space-y-4 animate-in fade-in duration-300">
                       <label className="block text-sm font-semibold text-slate-700">Изберете офис или адрес за доставка:</label>
-                      <div className="w-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-inner relative" style={{ minHeight: '650px' }}>
+                      <div className="w-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-inner relative" style={{ minHeight: '600px' }}>
                         {iframeLoading && (
                           <div className="absolute inset-0 p-4 space-y-4 bg-white z-10">
                             <Skeleton className="h-10 w-3/4 mb-6" />
-                            <div className="grid grid-cols-2 gap-4">
-                              <Skeleton className="h-32 w-full" />
-                              <Skeleton className="h-32 w-full" />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <Skeleton className="h-24 sm:h-32 w-full" />
+                              <Skeleton className="h-24 sm:h-32 w-full" />
                             </div>
-                            <Skeleton className="h-64 w-full" />
+                            <Skeleton className="h-48 sm:h-64 w-full" />
                           </div>
                         )}
                         <iframe 
                           src={iframeUrl}
                           className={`w-full border-0 transition-opacity duration-300 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`} 
-                          style={{ height: '650px' }}
+                          style={{ height: '600px' }}
                           onLoad={() => setIframeLoading(false)}
                           title="Econt Delivery"
                         />
@@ -252,7 +252,7 @@ export default function CheckoutPage() {
 
                 {/* 2. Stripe (Card) - Under Econt */}
                 <div 
-                  className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'stripe' ? 'border-red-600 bg-red-50/30' : 'border-slate-100'}`}
+                  className={`p-4 sm:p-6 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'stripe' ? 'border-red-600 bg-red-50/30' : 'border-slate-100'}`}
                   onClick={() => setPaymentMethod('stripe')}
                 >
                   <div className="flex items-start justify-between">
@@ -272,44 +272,46 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
+          </div>
 
+          <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-24">
             {/* Order Summary */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-               <div className="p-6 sm:p-8 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
+               <div className="p-5 sm:p-8 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
                   <div className="bg-slate-900 p-2 rounded-lg text-white">
                     <CreditCard className="w-5 h-5" />
                   </div>
-                  <h2 className="text-xl font-bold text-slate-900">Обобщение на поръчката</h2>
+                  <h2 className="text-xl font-bold text-slate-900">Обобщение</h2>
               </div>
               
-              <div className="p-6 sm:p-8">
+              <div className="p-4 sm:p-6 lg:p-8">
                 <div className="space-y-4 mb-8">
                   {cart.items.map((item) => (
                     <div key={item.product.id} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 rounded-lg transition-colors">
-                      <div className="flex flex-col">
-                        <span className="text-slate-900 font-medium">
+                      <div className="flex flex-col max-w-[70%]">
+                        <span className="text-slate-900 font-medium text-sm sm:text-base truncate">
                           {item.product.name}
                         </span>
                         <span className="text-slate-500 text-xs">Количество: {item.quantity}</span>
                       </div>
-                      <span className="font-bold text-slate-900">
+                      <span className="font-bold text-slate-900 text-sm sm:text-base">
                         {formatPrice(item.product.price * item.quantity, item.product.currency)}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                <div className="bg-slate-50 rounded-2xl p-6 space-y-3">
-                  <div className="flex justify-between text-sm">
+                <div className="bg-slate-50 rounded-2xl p-4 sm:p-6 space-y-3">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-slate-600">Междинна сума:</span>
                     <span className="font-medium text-slate-900">{formatPrice(cart.subtotal, 'EUR')}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-slate-600">ДДС (20%):</span>
                     <span className="font-medium text-slate-900">{formatPrice(cart.tax, 'EUR')}</span>
                   </div>
                   <div className="h-px bg-slate-200 my-2" />
-                  <div className="flex justify-between text-xl font-extrabold">
+                  <div className="flex justify-between text-lg sm:text-xl font-extrabold">
                     <span className="text-slate-900">Общо:</span>
                     <span className="text-red-600">{formatPrice(cart.total, 'EUR')}</span>
                   </div>
@@ -319,7 +321,7 @@ export default function CheckoutPage() {
 
             {error && (
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4 animate-in shake duration-500">
-                <div className="bg-amber-500 text-white p-1 rounded-full">
+                <div className="bg-amber-500 text-white p-1 rounded-full shrink-0">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
@@ -328,7 +330,7 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            <div className="pt-4">
+            <div className="pt-2">
               <Button
                 size="lg"
                 onClick={handleCheckout}

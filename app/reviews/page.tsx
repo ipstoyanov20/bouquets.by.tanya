@@ -97,8 +97,8 @@ export default function ReviewsPage() {
       </section>
 
       {/* Stats Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -translate-y-1/2 z-20 relative">
-        <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -translate-y-6 sm:-translate-y-10 md:-translate-y-12 z-20 relative">
+        <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-6 sm:p-8 grid grid-cols-1 md:grid-cols-3 gap-y-8 md:gap-8">
           <div className="text-center group">
             <div className="text-4xl font-extrabold text-slate-900 mb-1 group-hover:text-rose-600 transition-colors">4.9/5</div>
             <div className="flex justify-center gap-1 mb-2">
@@ -106,8 +106,8 @@ export default function ReviewsPage() {
             </div>
             <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">Средна оценка</p>
           </div>
-          <div className="text-center md:border-x border-slate-100 group">
-            <div className="text-4xl font-extrabold text-slate-900 mb-1 group-hover:text-rose-600 transition-colors">100%</div>
+          <div className="text-center border-y md:border-y-0 md:border-x border-slate-100 py-8 md:py-0 group">
+            <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-1 group-hover:text-rose-600 transition-colors">100%</div>
             <p className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">Ръчна изработка</p>
             <p className="text-xs text-rose-500 font-bold italic">Всеки детайл е важен</p>
           </div>
@@ -120,8 +120,8 @@ export default function ReviewsPage() {
       </div>
 
       {/* Reviews Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-24">
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-24">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
           {REVIEWS.map((review, i) => (
             <motion.div
               key={review.id}
@@ -177,10 +177,10 @@ export default function ReviewsPage() {
       {/* Bottom CTA */}
       <section className="bg-slate-900 py-16 text-center text-white px-4">
         <h2 className="text-3xl font-bold mb-6">Готови ли сте за Вашия букет?</h2>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-4">
           <a
             href="/products"
-            className="inline-block py-4 px-10 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold shadow-lg shadow-rose-900/40 transition-all"
+            className="inline-block w-full sm:w-auto py-4 px-10 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold shadow-lg shadow-rose-900/40 transition-all text-lg"
           >
             Разгледай Колекцията
           </a>
